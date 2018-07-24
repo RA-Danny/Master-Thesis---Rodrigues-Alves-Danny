@@ -1,30 +1,44 @@
 \chapter{CRM AI: An use case}
 
-One of the goals of this project is to integrate an artificial intelligence solution within a CRM. After the analysis of \textit{CRM AI}, it has been decided to develop a predictive machine learning model based on CRM data. This part has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Company A} \footnote{ELCA's client name and business subject to confidentiality.}.
+One of the goals of this project is to integrate an artificial intelligence solution within a CRM. After the analysis of \textit{CRM AI}, it has been decided to develop a predictive machine learning model based on CRM data. This part has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Company A} \footnote{Client name and business subject to confidentiality.}.
 
 
 % -------------------------------- Section: Client's use case
-\section{Client's use case}
-ELCA's client \textit{Company A} is present in the entire Swiss market, offering several products and services. One of the product is subject to a very tense market, where product's characteristics are the same among all competitors, with only the price as differentiate. This product is classified as a safety need in Maslow's hierarchy of needs\cite{wiki:Maslow's_hierarchy_of_needs}, meaning that people don't buy it because the \textit{like} it but rather because they \textit{need} it.
-
-
----
-
-Explication du marché du mazout + concurrence + comment le prix est fixé, change continuellement
-
-Achat annuel, dicté par la météo, mais aussi le prix qui flictufie de jour en jour
-
-Difficulté à fidéliser le client et a le retenir
+\section{Client's use case} \label{use-case}
+\textit{Company A} is a global energy enterprise active overall Switzerland. It offers several products and services and one of those is subject to a very tense market, where the characteristics of the product are the same for all companies and the price is the only difference between competitors. Therefore, several specificity of this product must be taken into account:
+\begin{itemize}
+\item This product is classified as a safety need in Maslow's hierarchy of needs\cite{wiki:Maslow's_hierarchy_of_needs}, meaning that people don't buy it because the \textit{like} it but rather because they \textit{need} it. 
+\item Due to its classification in Marslow's hierarchy, the product is usually stored in high quantities. Typical customer will make a large order, fill their supplies and once fully consumed, buy back the product, again in large quantities. Therefore, the product is not buy on a daily basis, more on an annual-basis. This complicates the job of Company A to build customer loyalty.
+\item As product's characteristics are the same for all, the price is the only variable that companies can \textit{play} with. Nevertheless, a part of the price is subject to market variation, from which companies will adapt their margins. As all stock market, the prices can vary, even marginally, each day.
+\end{itemize}
+ 
+ Based on all specificities of the product, building a customer relationship is difficult for \textit{Company A}. Customers only need to made one order per year and their are usually not under restrictive time constraint. Therefore, they can take the time to compare the price offered by all companies in the market and place an order accordingly. Based on this fact, Company A is often dealing with \textit{one-time customers} and has a high customer turnover \textbf{[ADD DATA SUPPORING THAT CLAIM]}.
+ 
+ 
+ To counter the customer churn, Company A is building several custoemr journey plas, several itneraction with other products and services, but they also want something uniquely targeting their key-product. Currently they are doing marketing on an annual basis, not specific to clients..Goal of this initiative is to built a machine elarning model predicting the next customer order. With this knowledge, Company A could plan their marketing strategy and contact customer before they start to look at the competition and, ultimately, retain them and build customer loyalt
+ 
 
 
 % -------------------------------- Section: Project outline
-\section{Outline of the project}
+\section{Machine learning metrics}
 Objective + Metrics + Success
 
-\lipsum[1]
+As defined in \ref{use-case}, the machine learning model to be built will indicate when a customer will make its next order. There is multiple possibilities here: the model can output a precise date for the next order or give a prediction at an higher granularity level, as weeks or months. Another possibility is to output a binary value, answering the question "Will this customer make an order in the coming day/week/month?". After discussion with Company A, it has been decided to set define the output of the model as \textit{the number of months until customer next order}. In details, it has been decided first to go with a regression problem, since a classification model with suffer from class imbalance. Then, among all possible output's granularity (day/week/month), it has been decided to go with the month-level predictions. The ideas is that the model \textit{should}, theoretically, give better predictions at an higher granularity level. First, there is a need to asses how well can a machine learning model deal with this use case. If it has been proved that regression model are well suited for this problem, as second phase would implied to make predictions at a more precise level, like the week level.
+
+
+The data to train the machine learning model will come from the CRM. One entry per month, the goal of the model is to be runned at the beginning of each month so Company A knows which clients to target.
+
+
+Then, we must define how to asses the success or not of a model. As defined earlier, this is a regression model, where the output should be a real number. Usual regression metrics like RMSE or MAE have been considered, but this metrics don't fit \textit{Company A} usage of predictions. Therefore, the regression metrics are not applicable and the problem is assesed as a classification problem would been, with precision, recall and F1-score. 
 
 % -------------------------------- Section: Data
 \section{Data from CRM}
+
+data from crm
+weather
+price
+feature engineering
+
 \lipsum[1]
 
 
