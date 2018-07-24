@@ -1,0 +1,35 @@
+\BOOKMARK [0][-]{chapter*.2}{Abstract}{}% 1
+\BOOKMARK [0][-]{chapter*.3}{Acknowledgements}{}% 2
+\BOOKMARK [0][-]{chapter*.4}{List of figures}{}% 3
+\BOOKMARK [0][-]{chapter*.5}{List of tables}{}% 4
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 5
+\BOOKMARK [1][-]{section.1.1}{Context}{chapter.1}% 6
+\BOOKMARK [1][-]{section.1.2}{Outline of the project}{chapter.1}% 7
+\BOOKMARK [0][-]{chapter.2}{CRM AI}{}% 8
+\BOOKMARK [1][-]{section.2.1}{Customer Relationship Management}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.2}{Artificial Intelligence within CRM}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.3}{CRM AI: Market review}{chapter.2}% 11
+\BOOKMARK [2][-]{subsection.2.3.1}{Goal of the analysis}{section.2.3}% 12
+\BOOKMARK [2][-]{subsection.2.3.2}{Ways of work}{section.2.3}% 13
+\BOOKMARK [1][-]{section.2.4}{Editors Market}{chapter.2}% 14
+\BOOKMARK [1][-]{section.2.5}{Data Management Platforms}{chapter.2}% 15
+\BOOKMARK [1][-]{section.2.6}{CRM Editors Ranking}{chapter.2}% 16
+\BOOKMARK [2][-]{subsection.2.6.1}{Current state}{section.2.6}% 17
+\BOOKMARK [2][-]{subsection.2.6.2}{Near feature status}{section.2.6}% 18
+\BOOKMARK [1][-]{section.2.7}{Conclusion}{chapter.2}% 19
+\BOOKMARK [0][-]{chapter.3}{CRM AI: An use case}{}% 20
+\BOOKMARK [1][-]{section.3.1}{Client's use case}{chapter.3}% 21
+\BOOKMARK [1][-]{section.3.2}{Outline of the project}{chapter.3}% 22
+\BOOKMARK [1][-]{section.3.3}{Data from CRM}{chapter.3}% 23
+\BOOKMARK [1][-]{section.3.4}{Machine Learning Experimentation}{chapter.3}% 24
+\BOOKMARK [2][-]{subsection.3.4.1}{Linear models}{section.3.4}% 25
+\BOOKMARK [2][-]{subsection.3.4.2}{Neural Networks}{section.3.4}% 26
+\BOOKMARK [2][-]{subsection.3.4.3}{Best model analysis}{section.3.4}% 27
+\BOOKMARK [1][-]{section.3.5}{Deployment}{chapter.3}% 28
+\BOOKMARK [2][-]{subsection.3.5.1}{Azure Architecture}{section.3.5}% 29
+\BOOKMARK [2][-]{subsection.3.5.2}{Integration with Dynamics 365}{section.3.5}% 30
+\BOOKMARK [1][-]{section.3.6}{Further Work}{chapter.3}% 31
+\BOOKMARK [1][-]{section.3.7}{Conclusion}{chapter.3}% 32
+\BOOKMARK [0][-]{chapter.4}{Discussion \046 Conclusion}{}% 33
+\BOOKMARK [0][-]{appendix.A}{An appendix}{}% 34
+\BOOKMARK [0][-]{appendix*.7}{Bibliography}{}% 35
