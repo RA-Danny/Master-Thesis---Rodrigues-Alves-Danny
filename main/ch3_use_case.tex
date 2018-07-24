@@ -21,15 +21,16 @@ One of the goals of this project is to integrate an artificial intelligence solu
 
 % -------------------------------- Section: Project outline
 \section{Machine learning metrics}
-Objective + Metrics + Success
+Objective + Metrics + Success 
+
 
 As defined in \ref{use-case}, the machine learning model to be built will indicate when a customer will make its next order. There is multiple possibilities here: the model can output a precise date for the next order or give a prediction at an higher granularity level, as weeks or months. Another possibility is to output a binary value, answering the question "Will this customer make an order in the coming day/week/month?". After discussion with Company A, it has been decided to set define the output of the model as \textit{the number of months until customer next order}. In details, it has been decided first to go with a regression problem, since a classification model with suffer from class imbalance. Then, among all possible output's granularity (day/week/month), it has been decided to go with the month-level predictions. The ideas is that the model \textit{should}, theoretically, give better predictions at an higher granularity level. First, there is a need to asses how well can a machine learning model deal with this use case. If it has been proved that regression model are well suited for this problem, as second phase would implied to make predictions at a more precise level, like the week level.
 
 
-The data to train the machine learning model will come from the CRM. One entry per month, the goal of the model is to be runned at the beginning of each month so Company A knows which clients to target.
+The data to train the machine learning model will come from the CRM. One entry per month, the goal of the model is to be run at the beginning of each month so Company A knows which clients to target.
 
 
-Then, we must define how to asses the success or not of a model. As defined earlier, this is a regression model, where the output should be a real number. Usual regression metrics like RMSE or MAE have been considered, but this metrics don't fit \textit{Company A} usage of predictions. Therefore, the regression metrics are not applicable and the problem is assesed as a classification problem would been, with precision, recall and F1-score. 
+Then, we must define how to asses the success or not of a model. As defined earlier, this is a regression model, where the output should be a real number. Usual regression metrics like RMSE or MAE have been considered, but this metrics don't fit \textit{Company A} usage of predictions. Therefore, the regression metrics are not applicable and the problem is assessed as a classification problem would been, with precision, recall and F1-score. 
 
 % -------------------------------- Section: Data
 \section{Data from CRM}
