@@ -79,7 +79,7 @@ Based on this classes assignment, a confusion matrix can be generated. Then, cus
 \begin{itemize}
     \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
     
-    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} to contact all clients. $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
+    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} contact all clients. $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
     
     \item \textbf{F1-score}: Same as the F1-score for classification tasks. $$ F1-score = \frac{2*Precision*Recall}{Precision+Recall} $$
 \end{itemize}
@@ -94,9 +94,18 @@ The metric \textbf{F1-score} will be the benchmark metric for this project.
 data from crm
 weather
 price
-feature engineering
+one entry per month
 
 Now that the machine learning goal has been determined, the data to use with the model must be specify. Data will come from the CRM database, more specifically a Dynamics 365 Online CRM.One entry per month, the goal of the model is to be run at the beginning of each month so Company A knows which clients to target.
+
+
+% -------------------------------- Section: Customer Jounrey + Feature engineering
+\section{Feature engineering} \label{sec:ml-features}
+
+feature engineering
+Customer journey
+
+
 
 
 % -------------------------------- Section: Machine Learning Experimentation
