@@ -1,50 +1,106 @@
-\chapter{CRM AI: An use case}
+\chapter{CRM AI: An use case} \label{chapter:use-case}
 
 One of the goals of this project is to integrate an artificial intelligence solution within a CRM. After the analysis of \textit{CRM AI}, it has been decided to develop a predictive machine learning model based on CRM data. This part has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Company A} \footnote{Client name and business subject to confidentiality.}.
 
+This chapter \ref{chapter:use-case} details this machine learning project. Sections \ref{sec:use-case} and \ref{sec:ml-metrics} explains the problem \textit{Company A} is currently facing and how a machine learning solution might solve it.The data to feed the machine learning comed from Company A's CRM, as explained in section \ref{sec:crm-data}. Section \ref{sec:ml-experimentation} details the machine learning experimentation and models used. Once the model has been trained and tested, it was integrate within Company A's CRM, as outlined in section \ref{sec:crm-deployment}. Finally, sections \ref{sec:use-case-further-work} and \ref{sec:use-case-conclusion} conclude this part with a reflection on the entire initiative.
 
 % -------------------------------- Section: Client's use case
-\section{Client's use case} \label{use-case}
+\section{Client's use case} \label{sec:use-case}
 \textit{Company A} is a global energy enterprise active overall Switzerland. It offers several products and services and one of those is subject to a very tense market, where the characteristics of the product are the same for all companies and the price is the only difference between competitors. Therefore, several specificity of this product must be taken into account:
 \begin{itemize}
 \item This product is classified as a safety need in Maslow's hierarchy of needs\cite{wiki:Maslow's_hierarchy_of_needs}, meaning that people don't buy it because the \textit{like} it but rather because they \textit{need} it. 
 \item Due to its classification in Marslow's hierarchy, the product is usually stored in high quantities. Typical customer will make a large order, fill their supplies and once fully consumed, buy back the product, again in large quantities. Therefore, the product is not buy on a daily basis, more on an annual-basis. This complicates the job of Company A to build customer loyalty.
 \item As product's characteristics are the same for all, the price is the only variable that companies can \textit{play} with. Nevertheless, a part of the price is subject to market variation, from which companies will adapt their margins. As all stock market, the prices can vary, even marginally, each day.
 \end{itemize}
- 
- Based on all specificities of the product, building a customer relationship is difficult for \textit{Company A}. Customers only need to made one order per year and their are usually not under restrictive time constraint. Therefore, they can take the time to compare the price offered by all companies in the market and place an order accordingly. Based on this fact, Company A is often dealing with \textit{one-time customers} and has a high customer turnover \textbf{[ADD DATA SUPPORING THAT CLAIM]}.
- 
- 
- To counter the customer churn, Company A is building several custoemr journey plas, several itneraction with other products and services, but they also want something uniquely targeting their key-product. Currently they are doing marketing on an annual basis, not specific to clients..Goal of this initiative is to built a machine elarning model predicting the next customer order. With this knowledge, Company A could plan their marketing strategy and contact customer before they start to look at the competition and, ultimately, retain them and build customer loyalt
- 
 
-
+ Based on these particularities of the product, building a solid customer relationship is difficult for \textit{Company A}. Customers only need to make one order per year and their are usually not subject to an immediate need. Therefore, they can take the time to compare the price offered by all suppliers in the market and place an order accordingly. This facts explain why \textit{Company A} is often dealing with \textit{one-time customers} and experiences a high customer turnover \textbf{[ADD DATA SUPPORING THAT CLAIM]}.
+ 
+ 
+ To counter this customer churn, \textit{Company A} is building \textit{customer recovery} plans to get back lost clients as well as interactions with other products and services to build an ecosystem of offers, but they want something uniquely targeting their key-product. Currently, Company A marketing team are contacting clients with annual newsletters. Those newsletters are send to each client every year around the same period. The company wants to strengthen this marketing process by contacting clients at the perfect time, before they start to search for offers from the competition. This will enable Company A to retain clients and ultimately build customer loyalty.
+ 
+ 
 % -------------------------------- Section: Project outline
-\section{Machine learning metrics}
-Objective + Metrics + Success 
+\section{Formalize machine learning problem} \label{sec:ml-metrics}
+
+As defined in section \ref{sec:use-case}, the goal of this initiative is to build a machine learning model that predicts the time of a customer's next order. This problem can be formalize as a regression problem, for which the machine learning model will output the date of next order: at date $d$, the model will predict $i$, the number of days until next order. So $d+i$ will give the precise data of customer next order. Variants are to define $i$ as the number of weeks or months until next order. The date will be less precise but the predictions might turn out to be more satisfying. Another possibility is to formalize it as a classification task and output a binary value to the question : \textit{"Will this customer make an order in the coming day/week/month ?"}. After discussion with \textit{Company A}, it has been decided to define the output of the model as \textit{the number of months until customer next order}. In details, it has been decided first to work with regression models to have multiple ranges of outputs. Then, for the output's granularity (day, week or month), predicting the number of month until next order \textit{should} give stronger results. It will allow \textit{Company A} to asses how well a regression techniques are suited for this problem and, in a second phase, trying to have more precise predictions, with an output at the week level for example.
+
+From the machine learning output, Company A wants to reach customers before they make an order. The process is planned as follow:
+\begin{enumerate}
+    \item At the beginning of each month, compute the predictions for all active clients\footnote{An client is flagged as inactive if no more business can be made with him/her (moving abroad or death for example)}.
+    \item Retrieve all clients with a predictions smaller than $2$.
+    \item Get in touch with these clients if and only if they have not been contacted in the past two months.
+\end{enumerate}
+The last step of this process is very important, as it will ensure that the company won't reach the same client twice.
 
 
-As defined in \ref{use-case}, the machine learning model to be built will indicate when a customer will make its next order. There is multiple possibilities here: the model can output a precise date for the next order or give a prediction at an higher granularity level, as weeks or months. Another possibility is to output a binary value, answering the question "Will this customer make an order in the coming day/week/month?". After discussion with Company A, it has been decided to set define the output of the model as \textit{the number of months until customer next order}. In details, it has been decided first to go with a regression problem, since a classification model with suffer from class imbalance. Then, among all possible output's granularity (day/week/month), it has been decided to go with the month-level predictions. The ideas is that the model \textit{should}, theoretically, give better predictions at an higher granularity level. First, there is a need to asses how well can a machine learning model deal with this use case. If it has been proved that regression model are well suited for this problem, as second phase would implied to make predictions at a more precise level, like the week level.
+Now that the machine learning goal and usage have been specified, the metrics for its success must be defined. As stated above, this is a regression model, where the output will be a real number. Usual metrics for regression problems like Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE) are not well suited for this project and for the usage of the predictions by \textit{Company A}. As specified above, the company plans to get in touch with a client only if the predictions is below $2$. Therefore, if the output of a model is equal to $7.0$ months or $4.35$, it ends up being the same for \textit{Company A}. This explains why RMSE or MAE cannot be used to evaluate machine learning models performance. As regression metrics are not applicable, the models will be assess with custom metrics inspired by classification problems: precision, recall and F1 score. 
 
+To transform the regression problem into a classification one, model's predictions will be classify into one of the following four classes: \texttt{0, 1, 2 or 3+}. The class \texttt{0} is meant for predictions between 0 and 1 (excluded) - clients that should make an order in the current month. Same idea for classes \texttt{1} and \texttt{2}. The class \texttt{3+} regroups all predictions with an output bigger or equal to 3 - client next order should occur in three or more months.
 
-The data to train the machine learning model will come from the CRM. One entry per month, the goal of the model is to be run at the beginning of each month so Company A knows which clients to target.
+\iffalse
+            \begin{table}[]
+                \centering
+                \begin{tabular}{c|c|
+                >{\columncolor[HTML]{EFEFEF}}c|c|
+                >{\columncolor[HTML]{EFEFEF}}c }
+                Customer & y\_true & y\_true class & y\_pred & y\_pred class \\ \hline
+                A        & 2       & 2             & 3.32    & 3             \\
+                B        & 0       & 0             & 0.4     & 0             \\
+                C        & 0       & 0             & 0.9     & 0             \\
+                D        & 5       & 3+            & 6.3     & 3+            \\
+                E        & 3       & 3+            & 2.9     & 2             \\
+                F        & 1       & 1             & 1.6     & 1             \\
+                G        & 1       & 1             & 0.8     & 0             \\
+                H        & 2       & 2             & 1.4     & 1             \\
+                I        & 9       & 3+            & 15.2    & 3+            \\
+                J        & 0       & 0             & 2.5     & 2            
+                \end{tabular}
+                \caption{Example of output truth and predictions}
+                \label{fig:1}
+            
+                \offinterlineskip
+                \moveright 5cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{15cm}{\textbf{True class}\\[50pt]}}}\par}
+                \hspace*{1cm}\MyHBox[\dimexpr4.1cm+1\fboxsep\relax]{Predicted class}\par
+                \hspace*{1cm}\MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\par
+                \MyTBox{0}{2}{0}{1}{0}
+                \MyTBox{1}{1}{1}{0}{0}
+                \MyTBox{2}{0}{1}{0}{1}
+                \MyTBox{3+}{0}{0}{1}{2}
+                \caption{Confusion matrix for Table 3.1}
+                \label{fig:my_label}
+            \end{table}
+\fi
 
+\begin{center}
+  \makebox[\textwidth]{\includegraphics[width=15cm]{images/caca.png}}
+\end{center}
 
-Then, we must define how to asses the success or not of a model. As defined earlier, this is a regression model, where the output should be a real number. Usual regression metrics like RMSE or MAE have been considered, but this metrics don't fit \textit{Company A} usage of predictions. Therefore, the regression metrics are not applicable and the problem is assessed as a classification problem would been, with precision, recall and F1-score. 
+Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall and F1-score are computed:
+\begin{itemize}
+    \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
+    
+    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} to contact all clients. $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
+    
+    \item \textbf{F1-score}: Same as the F1-score for classification tasks. $$ F1-score = \frac{2*Precision*Recall}{Precision+Recall} $$
+\end{itemize}
+
+In the formulas above, $t_i\_p_j$ correspond to the sum of true orders occurring in \texttt{i} months and predicted to occur in \texttt{j} months. For example $t_0\_p_0$ corresponds to the count of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
+
+The metric \textbf{F1-score} will be the benchmark metric for this project.
 
 % -------------------------------- Section: Data
-\section{Data from CRM}
+\section{Data from CRM} \label{sec:crm-data}
 
 data from crm
 weather
 price
 feature engineering
 
-\lipsum[1]
+Now that the machine learning goal has been determined, the data to use with the model must be specify. Data will come from the CRM database, more specifically a Dynamics 365 Online CRM.One entry per month, the goal of the model is to be run at the beginning of each month so Company A knows which clients to target.
 
 
 % -------------------------------- Section: Machine Learning Experimentation
-\section{Machine Learning Experimentation}
+\section{Machine Learning Experimentation} \label{sec:ml-experimentation}
 \lipsum[1]
 
 \subsection{Linear models}
@@ -58,7 +114,7 @@ feature engineering
 
 
 % -------------------------------- Section: Deployment
-\section{Deployment}
+\section{Deployment} \label{sec:crm-deployment}
 How to use machine learning predictions within a Dynamics 365 CRM, based on Azure products
 
 \subsection{Azure Architecture}
@@ -69,9 +125,9 @@ How to use machine learning predictions within a Dynamics 365 CRM, based on Azur
 
 
 % -------------------------------- Section: Further Work
-\section{Further Work}
+\section{Further Work} \label{sec:use-case-further-work}
 \lipsum[1]
 
 % -------------------------------- Section: Conclusion
-\section{Conclusion}
+\section{Conclusion} \label{sec:use-case-conclusion}
 \lipsum[1]
