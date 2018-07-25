@@ -46,9 +46,9 @@ To transform the regression problem into a classification one, model's predictio
                 Customer & y\_true & y\_true class & y\_pred & y\_pred class \\ \hline
                 A        & 2       & 2             & 3.32    & 3             \\
                 B        & 0       & 0             & 0.4     & 0             \\
-                C        & 0       & 0             & 0.9     & 0             \\
-                D        & 5       & 3+            & 6.3     & 3+            \\
-                E        & 3       & 3+            & 2.9     & 2             \\
+                C        & 0       & 0             & 0.1     & 0             \\
+                D        & 5       & 3+            & 2.9     & 2            \\
+                E        & 3       & 3+            & 0.8     & 0             \\
                 F        & 1       & 1             & 1.6     & 1             \\
                 G        & 1       & 1             & 0.8     & 0             \\
                 H        & 2       & 2             & 1.4     & 1             \\
@@ -65,7 +65,7 @@ To transform the regression problem into a classification one, model's predictio
                 \MyTBox{0}{2}{0}{1}{0}
                 \MyTBox{1}{1}{1}{0}{0}
                 \MyTBox{2}{0}{1}{0}{1}
-                \MyTBox{3+}{0}{0}{1}{2}
+                \MyTBox{3+}{1}{0}{1}{1}
                 \caption{Confusion matrix for Table 3.1}
                 \label{fig:my_label}
             \end{table}
@@ -77,11 +77,20 @@ To transform the regression problem into a classification one, model's predictio
 
 Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall and F1-score are computed:
 \begin{itemize}
-    \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
+    \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. 
+    $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
     
-    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} contact all clients. $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
+    For the example in table 3.2, the precision is equal to $\frac{2+0}{2+0+1+0} = 0.667$
     
-    \item \textbf{F1-score}: Same as the F1-score for classification tasks. $$ F1-score = \frac{2*Precision*Recall}{Precision+Recall} $$
+    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} contact all clients. 
+    $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
+    
+    For the example in table 3.2, the recall is equal to $\frac{2+1}{2+1+0+1} = 0.75$
+    
+    \item \textbf{F1-score}: Same as the F1-score for classification tasks. 
+    $$ \fscore = \frac{2*Precision*Recall}{Precision+Recall} $$
+
+    For the example in table 3.2, the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
 \end{itemize}
 
 In the formulas above, $t_i\_p_j$ correspond to the sum of true orders occurring in \texttt{i} months and predicted to occur in \texttt{j} months. For example $t_0\_p_0$ corresponds to the count of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
@@ -91,12 +100,18 @@ The metric \textbf{F1-score} will be the benchmark metric for this project.
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
 
+Now that the machine learning parameters have been determined, the data to use with the model must be detailed. Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analysis. For the analysis of data and machine learning experimentations, the development has been done in \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel.
+
+\subsection{Accounts, Clients and Orders}
+
+\subsection{External data}
+
+\subsection{Shape data for Machine Learning }
 data from crm
 weather
 price
 one entry per month
 
-Now that the machine learning goal has been determined, the data to use with the model must be specify. Data will come from the CRM database, more specifically a Dynamics 365 Online CRM.One entry per month, the goal of the model is to be run at the beginning of each month so Company A knows which clients to target.
 
 
 % -------------------------------- Section: Customer Jounrey + Feature engineering
