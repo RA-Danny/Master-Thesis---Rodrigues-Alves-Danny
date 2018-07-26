@@ -100,15 +100,53 @@ The metric \textbf{F1-score} will be the benchmark metric for this project.
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
 
-Now that the machine learning parameters have been determined, the data to use with the model must be detailed. Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analysis. For the analysis of data and machine learning experiments, the development has been done within \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel, mainly relying on the \textit{Pandas} package.
+Now that the machine learning parameters have been detailed, the data to be used with the model is specified. This section outlines the data gathering, cleaning, transformation and feature engineering. Before doing some machine learning experiments, a first goal is to understand the data and figure out the main factors that push a client to make an order. For the analysis of data and machine learning experiments, the development has been done within \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel, mainly relying on the \textit{Pandas} package.
 
-\subsection{Accounts, Clients and Orders}
-From the 291 entities present in Company A's CRM, only a few are useful for this project: \texttt{Orders}, \texttt{Accounts}, \texttt{Contacts} and \texttt{Buildings}. The relations between those entities are straightforward: An order is linked to an account, each account is linked to at least one contact, the \textit{primary contact}. The contact entity models a real person, where the \texttt{Account} entity model a customer for Company A, either a private person or a company. \texttt{Contacts} can then be linked to one or more instance of the \texttt{Building} entity.
+Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analyzed.
+
+From the 291 entities present in Company A's CRM, only a few are useful for this project: \texttt{Orders}, \texttt{Accounts}, \texttt{Contacts} and \texttt{Buildings}. The relations between those entities are straightforward: An order must be linked to an account and each account is linked to at least one contact, the \textit{primary contact}. The \texttt{Contact} entity models a real person, where the \texttt{Account} entity models a customer of \textit{Company A}, either a private person or a company. Contacts can then be linked to one or more instance of the \texttt{Building} entity.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{images/entityDiagram.png}
+    \caption{Entity Diagram for \textit{Company A} CRM data - \textbf{TODO}}
+    \label{fig:entity-diagram}
+\end{figure}
+
+\subsection{Orders}\label{sec:crm-orders}
+
+The \texttt{Order} entity holds all information linked to an order made by one account. The CRM contains all orders received by \textit{Company A} since 2013 and for this project the most recent data concern June 2018. Once the raw data has been download from all \texttt{Orders} entities, the first step is to clean this set of 808'532 orders. Even if Dynamics 365 has some restriction on data entry, mistakes can still happen when a person enters data into the system. Therefore, the orders dataset was first reduced, by discarding orders with an empty name, orders cancelled, orders containing mistakes in the internal parameters (amount delivered equal to zero, delivery date in 1956, delivery date occurring before the order date, ..). This cleaning phase removes 28.79\% of the data which gives a data set of 575'679 orders, each order having 37 features.
+
+All these orders have been made by 183'706 accounts, with a mean of 3.40 orders per account, but a median of 2. As showed by figure \ref{fig:orders-account-counts}, 50.77\% of accounts is this dataset have made 1 or 2 orders\footnote{Accounts which have made at least one order from 2013.}. This demonstrates the particularity of the market, in which clients are not \textit{loyal} to a given company, but often \textit{try} the competition. For the orders made by those infrequent accounts, it will be very difficult to extract common behavior from it and it might end up adding noise to the model. Therefore, they have been discarded from the final data set. Removing all orders made by an account with less that three orders output a data set of 451'966 orders (-21.49\%).
+
+As accounts only make one order per year, there is a seasonality effect (figure XXX). Even if the cyclicity of orders isn't regular thought the year, there is some facts that we can extract: There is usually two pics: the first around Mars and the second around October. On the opposite side, there is less orders coming in Spring. From those facts and the kind of regular cycles extracted, it has been decided that the Weather should be taken into account by the model. Usage of the weather data is detailed in section \ref{sec:external-data}.
 
 
-\subsection{External data}
+As stated above, the numbers of months between two orders for the typical customer is 
+As stated above, a typical customer will make an order once per year, with a number of months between two orders around 12 months. This claim is supported by the CRM data in figure XXX. Nevertheless, it's interesting to see that the mean is around 12 months between two consecutive orders, but the median is equal to 11 months. Figure XX clearly shows that there are a lot of orders coming 11 months after the previous one, but there is also a lot coming sooner. On the other hand, there is a lot less orders occurring at least 13 months after the previous.
+The plot in figure XXX also shows that there is a majority of orders occurring in the same month as the previous one. This is explained by Company A key-accounts. Those accounts are companies which need to be delivered on a weekly basis. As detailed in section \ref{sec:data-shape-for-ml}, this will not be a problem for the machine learning model.
+ \textbf{---> Redo the paragraph above but with the time between order per account, not per orders. Also add the segmentation as shown in slide 18.}
 
-\subsection{Shape data for Machine Learning }
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{images/orders-account-counts.png}
+    \caption{Number of orders per account - \textbf{TODO}}
+    \label{fig:orders-account-counts}
+\end{figure}
+
+Features presend in the order dataset: Amount of delivery, datum, product, channel of order and account GUID.
+
+
+\subsection{Accounts, Clients and Buildings}\label{sec:crm-accounts}
+The \texttt{Account} entity holds information related to the clients of \textit{Company A}, either a natural or legal person. Due to imports from a legacy system, the Dynamics 365 instance of \textit{Company A} contains more than 1'100'000 accounts. Filter those accounts based on the final orders from section \ref{sec:crm-orders} gives 88'552 accounts, with 244 features per account. The company stocks a lot of account properties in their CRM, mainly for legal reasons, and the vast majority of those being null. After a review of all these features, only 11 of them will be kept, as the information if the account is active or not, or the account's name, which will be compared it's primary client name.
+
+Indeed, all accounts are linked to a primary contact. The \texttt{Contact} entity holds information about a physical person, like its address or phone number. From this entity, only two features will be used: the birth date and the name. The birth date will be used to see if the age of a person as an influence on it's buying habits. The contact name will be compared to the account name. As mentioned above, the Account entity can be either a natural or a legal person, but there is no feature in the CRM to distinguish those two types of accounts. Nevertheless, this information is important, as a legal person can make orders on a very frequent basis. To build this feature, an account's name will be compared to the name of its primary contact. The assumption is that an account modelling a natural person will have the same name as the primary contact, but the name of a legal person is not the same as the primary contact. \textbf{TODO: Add chart showing that it works (Inspired by slide 19 \#2).}
+
+Concerning the \texttt{Building} entity, it holds information about the building (house, offices, cottage,...) of a contact. Even if not all contacts have such link \textbf{TODO: Add data}, this entity will be used to build new features modeling the amount of product stocked and used trought the time, as detailed in section \ref{sec:ml-features}.
+
+\subsection{External data}\label{sec:external-data}
+
+\subsection{Shape data for Machine Learning }\label{sec:data-shape-for-ml}
 data from crm
 weather
 price
