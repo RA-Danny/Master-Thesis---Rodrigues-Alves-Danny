@@ -24,5 +24,32 @@
     \thispagestyle{empty}
 }
 
+
+\usepackage{array}
+\usepackage{multirow}
+
+\usepackage{graphicx}
+
+\newcommand\MyBox[1]{%
+  \fbox{\parbox[c][1cm][c]{1cm}{\centering #1}}%
+}
+\newcommand\MyVBox[1]{%
+  \parbox[c][1cm][c]{1cm}{\centering\bfseries #1}%
+}  
+\newcommand\MyHBoxT[2][\dimexpr1cm+2\fboxsep\relax]{%
+  \parbox[c][1cm][c]{#1}{\centering #2}%
+} 
+\newcommand\MyHBox[2][\dimexpr1cm+2\fboxsep\relax]{%
+  \parbox[c][1cm][c]{#1}{\centering\bfseries #2}%
+}  
+\newcommand\MyTBox[5]{%
+  \MyVBox{#1}\MyBox{#2}\hspace*{-\fboxrule}%
+  \MyBox{#3}\hspace*{-\fboxrule}%
+  \MyBox{#4}\hspace*{-\fboxrule}%
+  \MyBox{#5}\par\vspace{-\fboxrule}
+}  
+\usepackage{caption}
+\usepackage{changepage}
+
 \usepackage{amsmath}
 \DeclareMathOperator{\fscore}{\textit{F1-score}}

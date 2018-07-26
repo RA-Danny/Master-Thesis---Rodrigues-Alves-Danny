@@ -37,10 +37,10 @@ Now that the machine learning goal and usage have been specified, the metrics fo
 
 To transform the regression problem into a classification one, model's predictions will be classify into one of the following four classes: \texttt{0, 1, 2 or 3+}. The class \texttt{0} is meant for predictions between 0 and 1 (excluded) - clients that should make an order in the current month. Same idea for classes \texttt{1} and \texttt{2}. The class \texttt{3+} regroups all predictions with an output bigger or equal to 3 - client next order should occur in three or more months.
 
-\iffalse
-            \begin{table}[]
-                \centering
-                \begin{tabular}{c|c|
+\begin{adjustwidth}{-1cm}{}
+    \begin{minipage}[b]{0.60\linewidth}
+    \resizebox{1.0\columnwidth}{!}{
+        \begin{tabular}[t]{c|c|
                 >{\columncolor[HTML]{EFEFEF}}c|c|
                 >{\columncolor[HTML]{EFEFEF}}c }
                 Customer & y\_true & y\_true class & y\_pred & y\_pred class \\ \hline
@@ -54,26 +54,26 @@ To transform the regression problem into a classification one, model's predictio
                 H        & 2       & 2             & 1.4     & 1             \\
                 I        & 9       & 3+            & 15.2    & 3+            \\
                 J        & 0       & 0             & 2.5     & 2            
-                \end{tabular}
-                \caption{Example of output truth and predictions}
-                \label{fig:1}
-            
-                \offinterlineskip
-                \moveright 5cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{15cm}{\textbf{True class}\\[50pt]}}}\par}
-                \hspace*{1cm}\MyHBox[\dimexpr4.1cm+1\fboxsep\relax]{Predicted class}\par
-                \hspace*{1cm}\MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\par
-                \MyTBox{0}{2}{0}{1}{0}
-                \MyTBox{1}{1}{1}{0}{0}
-                \MyTBox{2}{0}{1}{0}{1}
-                \MyTBox{3+}{1}{0}{1}{1}
-                \caption{Confusion matrix for Table 3.1}
-                \label{fig:my_label}
-            \end{table}
-\fi
+        \end{tabular}
+        }
+        \captionof{table}{Example of output truth and predictions}
+        \label{table:example_truth_preds} 
+    \end{minipage}
+    \hspace{1.0cm}
+    \begin{minipage}[b]{0.45\linewidth}
+        \offinterlineskip
+        \moveright 1cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{15cm}{True class\\[50pt]}}}\par}
+        \hspace*{1cm}\MyHBoxT[\dimexpr5.1cm]{Predicted class}\vspace*{-0.4cm}
+        \hspace*{1cm}\MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\vspace*{-0.2cm}
+        \MyTBox{0}{2}{0}{1}{0}
+        \MyTBox{1}{1}{1}{0}{0}
+        \MyTBox{2}{0}{1}{0}{1}
+        \MyTBox{3+}{1}{0}{1}{1}
+        \captionof{table}{Confusion matrix for Table 3.1}
+        \label{table:example_confusion_matrix} 
+    \end{minipage}
+\end{adjustwidth}
 
-\begin{center}
-  \makebox[\textwidth]{\includegraphics[width=15cm]{images/caca.png}}
-\end{center}
 
 Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall and F1-score are computed:
 \begin{itemize}
@@ -100,9 +100,19 @@ The metric \textbf{F1-score} will be the benchmark metric for this project.
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
 
-Now that the machine learning parameters have been determined, the data to use with the model must be detailed. Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analysis. For the analysis of data and machine learning experimentations, the development has been done in \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel.
+Now that the machine learning parameters have been determined, the data to use with the model must be detailed. Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analysis. For the analysis of data and machine learning experiments, the development has been done within \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel, mainly relying on the \textit{Pandas} package.
 
 \subsection{Accounts, Clients and Orders}
+From the 291 entities present in Company A's CRM, only a few are useful for this project: \texttt{Orders}, \texttt{Accounts}, \texttt{Contacts} and \texttt{Buildings}. The relations between those entities are straightforward: An order is linked to an account, each account is linked to at least one contact, the \textit{primary contact}. The contact entity models a real person, where the \texttt{Account} entity model a customer for Company A, either a private person or a company. \texttt{Contacts} can then be linked to one or more instance of the \texttt{Building} entity.
+
+\refstepcounter{table}\label{caca}
+{
+\hskip-10.0cm
+    \begin{table}[]
+        \caption[DANNY The KING]{}
+        \label{tab:my_label}
+    \end{table}
+}
 
 \subsection{External data}
 
