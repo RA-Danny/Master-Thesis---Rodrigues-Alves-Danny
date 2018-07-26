@@ -80,17 +80,17 @@ Based on this classes assignment, a confusion matrix can be generated. Then, cus
     \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. 
     $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
     
-    For the example in table 3.2, the precision is equal to $\frac{2+0}{2+0+1+0} = 0.667$
+    For the example in table \ref{table:example_confusion_matrix}, the precision is equal to $\frac{2+0}{2+0+1+0} = 0.667$
     
     \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Company A} contact all clients. 
     $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
     
-    For the example in table 3.2, the recall is equal to $\frac{2+1}{2+1+0+1} = 0.75$
+    For the example in table \ref{table:example_confusion_matrix}, the recall is equal to $\frac{2+1}{2+1+0+1} = 0.75$
     
     \item \textbf{F1-score}: Same as the F1-score for classification tasks. 
     $$ \fscore = \frac{2*Precision*Recall}{Precision+Recall} $$
 
-    For the example in table 3.2, the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
+    For the example in table \ref{table:example_confusion_matrix} the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
 \end{itemize}
 
 In the formulas above, $t_i\_p_j$ correspond to the sum of true orders occurring in \texttt{i} months and predicted to occur in \texttt{j} months. For example $t_0\_p_0$ corresponds to the count of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
@@ -100,11 +100,9 @@ The metric \textbf{F1-score} will be the benchmark metric for this project.
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
 
-Now that the machine learning parameters have been detailed, the data to be used with the model is specified. This section outlines the data gathering, cleaning, transformation and feature engineering. Before doing some machine learning experiments, a first goal is to understand the data and figure out the main factors that push a client to make an order. For the analysis of data and machine learning experiments, the development has been done within \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel, mainly relying on the \textit{Pandas} package.
+This section outlines the data gathering, cleaning, transformation and feature engineering processes. Before doing some machine learning experiments, a first goal is to understand the data and figure out the main factors that push a client to make an order. For the analysis of data and machine learning experiments, the development has been done within \textit{Jupyter Notebooks} with a \texttt{Python 3} kernel, mainly relying on the \textit{Pandas} package.
 
-Data comes from \textit{Company A}'s CRM, a Dynamics 365 Online system. Thanks to the Web Api offered by Dynamics 365, all entities of the CRM have been retrieved and analyzed.
-
-From the 291 entities present in Company A's CRM, only a few are useful for this project: \texttt{Orders}, \texttt{Accounts}, \texttt{Contacts} and \texttt{Buildings}. The relations between those entities are straightforward: An order must be linked to an account and each account is linked to at least one contact, the \textit{primary contact}. The \texttt{Contact} entity models a real person, where the \texttt{Account} entity models a customer of \textit{Company A}, either a private person or a company. Contacts can then be linked to one or more instance of the \texttt{Building} entity.
+Data comes from \textit{Company A} CRM, a Dynamics 365 Online instance. By using to the \textit{Web Api} offered by Dynamics 365, all entities of the CRM have been retrieved and analyzed. From the 291 entities present in the CRM, only a few are useful for this project: \texttt{Orders}, \texttt{Accounts}, \texttt{Contacts} and \texttt{Buildings}. The relationships between those entities are straightforward: An order must be linked to an account and each account is linked to at least one contact, one of which must be the \textit{primary contact}. The \texttt{Contact} entity models a real person, where the \texttt{Account} entity models a customer of \textit{Company A}, either a person or a company. Contacts can then be linked to one or more instance of the \texttt{Building} entity.
 
 \begin{figure}[h]
     \centering
@@ -115,17 +113,30 @@ From the 291 entities present in Company A's CRM, only a few are useful for this
 
 \subsection{Orders}\label{sec:crm-orders}
 
-The \texttt{Order} entity holds all information linked to an order made by one account. The CRM contains all orders received by \textit{Company A} since 2013 and for this project the most recent data concern June 2018. Once the raw data has been download from all \texttt{Orders} entities, the first step is to clean this set of 808'532 orders. Even if Dynamics 365 has some restriction on data entry, mistakes can still happen when a person enters data into the system. Therefore, the orders dataset was first reduced, by discarding orders with an empty name, orders cancelled, orders containing mistakes in the internal parameters (amount delivered equal to zero, delivery date in 1956, delivery date occurring before the order date, ..). This cleaning phase removes 28.79\% of the data which gives a data set of 575'679 orders, each order having 37 features.
+The \texttt{Order} entity holds all information about an order made by an account. The CRM contains all orders received by \textit{Company A} since 2013 until nowadays. For this project, all orders considered ranged from January 2013 until June 2018, included. Once the raw data has been downloaded from all \texttt{Orders} entities, the first steps are to clean this set of 808'532 orders. Indeed, even if a CRM save its data in an organized manner and Dynamics 365 has some verification upon data entry, mistakes can still happen when a person enters data into the system. Orders have been discarded based on their names -empty or not-, on their status -active or not- and on their internal characteristics (amount delivered equal to zero, delivery date in 1956, delivery date occurring before the order date, ..). This cleaning phase removes 28.79\% of the orders, which gives a data set of 575'679 orders, each order having 37 features.
 
-All these orders have been made by 183'706 accounts, with a mean of 3.40 orders per account, but a median of 2. As showed by figure \ref{fig:orders-account-counts}, 50.77\% of accounts is this dataset have made 1 or 2 orders\footnote{Accounts which have made at least one order from 2013.}. This demonstrates the particularity of the market, in which clients are not \textit{loyal} to a given company, but often \textit{try} the competition. For the orders made by those infrequent accounts, it will be very difficult to extract common behavior from it and it might end up adding noise to the model. Therefore, they have been discarded from the final data set. Removing all orders made by an account with less that three orders output a data set of 451'966 orders (-21.49\%).
+All these orders have been made by 183'706 accounts, with a mean of 3.14 orders per account and a median of 2. Grouping accounts per the number of orders made reveals that 50.77\% of accounts is this dataset have made one or two orders\footnote{Accounts which have made at least one order since 2013 - Figure \ref{fig-annex:orders_per_accounts} in the annexes.}. This demonstrates the singularity of a very competitive market in which clients often change their suppliers and fully benefit from the competition. In respect to the machine learning model, it will be very difficult to extract some common behavior and generalize, due to the low amount of orders for those accounts. Therefore, accounts with less than three orders have been discarded, leading to a dataset composed of 451'986 orders (-21.49\%).
 
-As accounts only make one order per year, there is a seasonality effect (figure XXX). Even if the cyclicity of orders isn't regular thought the year, there is some facts that we can extract: There is usually two pics: the first around Mars and the second around October. On the opposite side, there is less orders coming in Spring. From those facts and the kind of regular cycles extracted, it has been decided that the Weather should be taken into account by the model. Usage of the weather data is detailed in section \ref{sec:external-data}.
+As traditional accounts only order once per year, there is a seasonality effect visible when plotting the number of orders per month trough the years (figure \ref{fig:order_per_monthyear}). Even if the periodicity of orders isn't regular, a year experiences two pics of orders: one around March and another around October. On the opposite side, there have been fewer orders in Spring, around the month of June. The data plot in figure \ref{fig:order_per_monthyear} indicates that the weather must play a crucial order when accounts are making orders - it's colder in March and October than in June. As detailed in further section \ref{sec:external-data}, the model will take some weather-related information into consideration.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{images/order_month_year.png}
+    \caption{Number of orders per month per year}
+    \label{fig:order_per_monthyear}
+\end{figure}
+
+
+
+\begin{center}\textbf{--> HERE <---}\end{center}
 
 As stated above, the numbers of months between two orders for the typical customer is 
 As stated above, a typical customer will make an order once per year, with a number of months between two orders around 12 months. This claim is supported by the CRM data in figure XXX. Nevertheless, it's interesting to see that the mean is around 12 months between two consecutive orders, but the median is equal to 11 months. Figure XX clearly shows that there are a lot of orders coming 11 months after the previous one, but there is also a lot coming sooner. On the other hand, there is a lot less orders occurring at least 13 months after the previous.
 The plot in figure XXX also shows that there is a majority of orders occurring in the same month as the previous one. This is explained by Company A key-accounts. Those accounts are companies which need to be delivered on a weekly basis. As detailed in section \ref{sec:data-shape-for-ml}, this will not be a problem for the machine learning model.
  \textbf{---> Redo the paragraph above but with the time between order per account, not per orders. Also add the segmentation as shown in slide 18.}
+
+\begin{center}\textbf{--> HERE <---}\end{center}
+
 
 \begin{figure}[h]
     \centering
