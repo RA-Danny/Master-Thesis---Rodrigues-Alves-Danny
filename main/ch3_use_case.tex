@@ -127,35 +127,43 @@ As traditional accounts only order once per year, there is a seasonality effect 
 \end{figure}
 
 
-
-\begin{center}\textbf{--> HERE <---}\end{center}
-
-As stated above, the numbers of months between two orders for the typical customer is 
-As stated above, a typical customer will make an order once per year, with a number of months between two orders around 12 months. This claim is supported by the CRM data in figure XXX. Nevertheless, it's interesting to see that the mean is around 12 months between two consecutive orders, but the median is equal to 11 months. Figure XX clearly shows that there are a lot of orders coming 11 months after the previous one, but there is also a lot coming sooner. On the other hand, there is a lot less orders occurring at least 13 months after the previous.
-The plot in figure XXX also shows that there is a majority of orders occurring in the same month as the previous one. This is explained by Company A key-accounts. Those accounts are companies which need to be delivered on a weekly basis. As detailed in section \ref{sec:data-shape-for-ml}, this will not be a problem for the machine learning model.
- \textbf{---> Redo the paragraph above but with the time between order per account, not per orders. Also add the segmentation as shown in slide 18.}
-
-\begin{center}\textbf{--> HERE <---}\end{center}
-
+As stated above, a typical customer will make an order once per year, with a number of months between two orders around 12 months, as presented in figure \ref{fig:orders-account-counts}. A mean of 12.67 months and a median of 11 months are retrieved by computing the average "wait" time between two orders for all accounts. Figure \ref{fig:orders-account-counts} shows that there is a lot of accounts waiting 11 months between two orders, but there is also account which order more frequently. On the other side, the number of accounts waiting 13 or more months between two orders decreases. Within this plot, there are two pics: the first one logically around 11 months and a second one around 23 months. This second pic is probably due to "jumper accounts", accounts that order one year with \textit{Company A}, the following year with the competition and, two years after they first orders, order again with \textit{Company A}. 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=15cm]{images/orders-account-counts.png}
-    \caption{Number of orders per account - \textbf{TODO}}
+    \includegraphics[width=15cm]{images/accounts-average-time-orders.png}
+    \caption{Accounts grouped by the average number of months between two orders}
     \label{fig:orders-account-counts}
 \end{figure}
 
-Features presend in the order dataset: Amount of delivery, datum, product, channel of order and account GUID.
+This plot also reveals \textit{key-accounts}, accounts ordering at least once per month. Those accounts are most of the time companies, considered as very regular customers by \textit{Company A}. As detailed in section \ref{sec:data-shape-for-ml}, \textit{key-accounts} will not be a problem for the machine learning model.
+
+
+
 
 
 \subsection{Accounts, Clients and Buildings}\label{sec:crm-accounts}
-The \texttt{Account} entity holds information related to the clients of \textit{Company A}, either a natural or legal person. Due to imports from a legacy system, the Dynamics 365 instance of \textit{Company A} contains more than 1'100'000 accounts. Filter those accounts based on the final orders from section \ref{sec:crm-orders} gives 88'552 accounts, with 244 features per account. The company stocks a lot of account properties in their CRM, mainly for legal reasons, and the vast majority of those being null. After a review of all these features, only 11 of them will be kept, as the information if the account is active or not, or the account's name, which will be compared it's primary client name.
+The \texttt{Account} entity holds information related to the clients of \textit{Company A}, either a natural or legal person. Due to imports from a legacy system, the Dynamics 365 instance of \textit{Company A} contains more than 1'100'000 accounts. Filtering those accounts based on the final orders from section \ref{sec:crm-orders} gives 88'552 accounts, with 244 features per account. The company stocks a lot of account properties in their CRM and the vast majority of those are null or not useful for this next order prediction task. After a review of all these features, only 11 will be kept, among which account's activeness and account's name, which will be compared to it's primary client name.
 
-Indeed, all accounts are linked to a primary contact. The \texttt{Contact} entity holds information about a physical person, like its address or phone number. From this entity, only two features will be used: the birth date and the name. The birth date will be used to see if the age of a person as an influence on it's buying habits. The contact name will be compared to the account name. As mentioned above, the Account entity can be either a natural or a legal person, but there is no feature in the CRM to distinguish those two types of accounts. Nevertheless, this information is important, as a legal person can make orders on a very frequent basis. To build this feature, an account's name will be compared to the name of its primary contact. The assumption is that an account modelling a natural person will have the same name as the primary contact, but the name of a legal person is not the same as the primary contact. \textbf{TODO: Add chart showing that it works (Inspired by slide 19 \#2).}
+Indeed, all accounts are linked to a primary contact. The \texttt{Contact} entity holds information about a physical person, like its address or phone number. From this entity, only two features will be used: the birth date and the name. The birth date will be used to see if the age of a person as an influence on it's buying habits. The contact name will be use in comparison with the account name. As mentioned above, the \texttt{Account} entity can be a natural or a legal person, but there is no feature in the CRM to specify this account state. As this information is important -a legal person can make orders on a very frequent basis- such feature is built. An account's name can be compared to the name of its primary contact. If both names are equal, the account will be considered as a natural person, otherwise the account will be considered as a legal person, assuming that an account modelling a legal person will not have the same name as it's primary contact. As shown in figure \ref{fig:account-contact-name-orders}, accounts classified as a legal person made orders much more frequently.
 
-Concerning the \texttt{Building} entity, it holds information about the building (house, offices, cottage,...) of a contact. Even if not all contacts have such link \textbf{TODO: Add data}, this entity will be used to build new features modeling the amount of product stocked and used trought the time, as detailed in section \ref{sec:ml-features}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{images/account-contact-name-orders.png}
+    \caption{Number of months between two orders related to the account-contact name}
+    \label{fig:account-contact-name-orders}
+\end{figure}
+
+Concerning the \texttt{Building} entity, it holds information about the building of a contact (house, offices, cottage,...). Even if not all contacts have such link (80.84\% of contacts are linked to at least one building), this entity will be used to build new features modeling the amount of product stocked and used, as detailed in section \ref{sec:ml-features}.
+
 
 \subsection{External data}\label{sec:external-data}
+
+\begin{center}\textbf{--> HERE <---}\end{center}
+
+weather - individualized by account based on primary contact address
+
+price - nothing more
 
 \subsection{Shape data for Machine Learning }\label{sec:data-shape-for-ml}
 data from crm
