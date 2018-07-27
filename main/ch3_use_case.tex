@@ -163,20 +163,21 @@ Weather data has also an influence on the ordering patterns of clients, as shown
 
 
 \subsection{Shape data for Machine Learning }\label{sec:data-shape-for-ml}
+Once that all data has been gathered, cleaned and analyzed, it needs to be shaped in such format that machine learning models can use it. As defined above, the model's output will be the number of months until customer next order and the model is planned to be used on a monthly basis. For all accounts, one entry per month is created, from the first month after client's first order until the month of last order. For all monthly entries, the output is the number of months until next customer order and the data contains features related to the account (shared among all entries), features related to the previous orders and features related to the current month, like the monthly weather for example. 
 
+Figure \ref{fig:data-build-example} contains an example of such data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the final ML dataset concerns May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and April 2014, date of account's second order. The same principle will be apply to all following months, until March 2016, date of the last order made by this account.
 
-\begin{center}\textbf{--> HERE <---}\end{center}
-
-
-data from crm
-weather
-price
-one entry per month
-
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=14cm]{images/data-build-ml-example.png}
+    \caption{Sketch of the ML model data building process. Yellow circles model account orders.}
+    \label{fig:data-build-example}
+\end{figure}
 
 % -------------------------------- Section: Customer Jounrey + Feature engineering
 \section{Feature engineering} \label{sec:ml-features}
+
+\begin{center}\textbf{--> HERE <---}\end{center}
 
 feature engineering
 Customer journey
