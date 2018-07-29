@@ -13,7 +13,7 @@ This chapter \ref{chapter:use-case} details this machine learning project. Secti
 \item As product's characteristics are the same for all, the price is the only variable that companies can \textit{play} with. Nevertheless, a part of the price is subject to market variation, from which companies will adapt their margins. As all stock market, the prices can vary, even marginally, each day.
 \end{itemize}
 
- Based on these particularities of the product, building a solid customer relationship is difficult for \textit{Company A}. Customers only need to make one order per year and their are usually not subject to an immediate need. Therefore, they can take the time to compare the price offered by all suppliers in the market and place an order accordingly. This facts explain why \textit{Company A} is often dealing with \textit{one-time customers} and experiences a high customer turnover \textbf{[ADD DATA SUPPORING THAT CLAIM]}.
+ Based on these particularities of the product, building a solid customer relationship is difficult for \textit{Company A}. Customers only need to make one order per year and they are usually not subject to an immediate need. Therefore, they can take the time to compare the price offered by all suppliers in the market and place an order accordingly. This facts explain why \textit{Company A} is often dealing with \textit{one-time customers} and experiences a high customer turnover, as shown in figure \ref{fig-annex:orders_per_accounts}.
  
  
  To counter this customer churn, \textit{Company A} is building \textit{customer recovery} plans to get back lost clients as well as interactions with other products and services to build an ecosystem of offers, but they want something uniquely targeting their key-product. Currently, Company A marketing team are contacting clients with annual newsletters. Those newsletters are send to each client every year around the same period. The company wants to strengthen this marketing process by contacting clients at the perfect time, before they start to search for offers from the competition. This will enable Company A to retain clients and ultimately build customer loyalty.
@@ -132,7 +132,7 @@ As stated above, a typical customer will make an order once per year, with a num
 \begin{figure}[h]
     \centering
     \includegraphics[width=15cm]{images/accounts-average-time-orders.png}
-    \caption{Accounts grouped by the average number of months between two orders}
+    \caption[Average number of months between two orders]{Accounts grouped by the average number of months between two orders}
     \label{fig:orders-account-counts}
 \end{figure}
 
@@ -147,7 +147,7 @@ Indeed, all accounts are linked to a primary contact. The \texttt{Contact} entit
 \begin{figure}[h]
     \centering
     \includegraphics[width=15cm]{images/account-contact-name-orders.png}
-    \caption{Number of months between two orders related to the account-contact name}
+    \caption[Account and contact's name influence of order's frequency]{Number of months between two orders related to the account-contact name}
     \label{fig:account-contact-name-orders}
 \end{figure}
 
@@ -162,32 +162,51 @@ As explained in section \ref{sec:use-case}, the prices are mainly dependant of t
 Weather data has also an influence on the ordering patterns of clients, as shown in section \ref{sec:crm-orders}. Weather data has been provided by \texttt{MeteoSwiss} with several daily metrics associated to the 20 meteorological station across Switzerland (weather, precipitations, wind, ...). Based on the primary contact address, each \texttt{account} object has been linked to one of those station and among all metrics, only the weather degrees \big[°C\big] have been used.
 
 
-\subsection{Shape data for Machine Learning }\label{sec:data-shape-for-ml}
-Once that all data has been gathered, cleaned and analyzed, it needs to be shaped in such format that machine learning models can use it. As defined above, the model's output will be the number of months until customer next order and the model is planned to be used on a monthly basis. For all accounts, one entry per month is created, from the first month after client's first order until the month of last order. For all monthly entries, the output is the number of months until next customer order and the data contains features related to the account (shared among all entries), features related to the previous orders and features related to the current month, like the monthly weather for example. 
+\section{Data for the machine learning}
+Once that all data has been gathered, cleaned and analyzed, it needs to be shaped in such format that machine learning models can use it. This section detail how the data from \ref{sec:crm-data} has been combined and then reshaped to be given to machine learning models.
+
+\subsection{Dataset construction}\label{sec:data-shape-for-ml}
+As defined above, the model's output will be the number of months until customer next order and the model is planned to be used on a monthly basis. For all accounts, one entry per month is created, from the first month after client's first order until the month of last order. For all monthly entries, the output is the number of months until next customer order and the data contains features related to the account (shared among all entries), features related to the previous orders and features related to the current month, like the monthly weather for example. 
 
 Figure \ref{fig:data-build-example} contains an example of such data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the final ML dataset concerns May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and April 2014, date of account's second order. The same principle will be apply to all following months, until March 2016, date of the last order made by this account.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=14cm]{images/data-build-ml-example.png}
-    \caption{Sketch of the ML model data building process. Yellow circles model account orders.}
+    \caption[Process to build data for machine learning]{Sketch of the ML model data building process. Yellow circles model account orders.}
     \label{fig:data-build-example}
 \end{figure}
 
+
 % -------------------------------- Section: Customer Jounrey + Feature engineering
-\section{Feature engineering} \label{sec:ml-features}
+\subsection{Feature engineering}\label{sec:ml-features}
 
-\begin{center}\textbf{--> HERE <---}\end{center}
+Before creating new features, all datasets must be combined together. Starting for right to left on figure \ref{fig:entity-diagram}, \texttt{Building} and \texttt{Contact} data are combined since a contact may be linked to one or multiple building (one-to-many relation). From the \textit{Building} entity, only one feature will be used: the volume of its reservoir, used to stock the product. In the case of multiple buildings being linked to the same account, the average capacity of all reservoirs will be computed and added to the contact data. 
 
-feature engineering
-Customer journey
+Then, the entities \texttt{Account} and \texttt{Contact} are combined based on the account primary contact, with its address and birth date added to the account. This combination of the \texttt{Account}, \texttt{Contact} and \texttt{Building} entities builds a first set of features, defined as \textit{account-related} features.
 
+Each row in the final machine learning data is composed of three types of features: the \textit{account-related} ones, features related to the current month and features about the previous order. Features related to the current month are mainly build from the two external data to encapsulate the variations of the prices and the weather temperature through time. Finally, the previous order is also used to capture its characteristics, like "\textit{Was it a big or a small order}?" or "\textit{When did this order occurred compare to the one before?}".
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=8cm]{images/data-build-ml-example-row.png}
+    \caption[Features building for specific month]{Sketch of the features used for the row of September 2014 in figure \ref{fig:data-build-example}}
+    \label{fig:data-build-row-example}
+\end{figure}
+
+The exhaustive list of the 122 features build can be found in annex \ref{annex:features-for-ml}. Those features were created based on \textit{Company A} knowledge of its business, meetings with the marketing team and analyses of \textit{Customer Journeys}. A \textit{Customer Journey} is a plot where all orders of a selected account are visible, with the \texttt{Weather} and \texttt{Price} information through the months (see an example in figure \ref{fig-annex:customer-journey}). 
+
+Fetures were also created after a trial and error phase in the process of builidng and validating machine learning arhcitectures.
 
 
 
 % -------------------------------- Section: Machine Learning Experimentation
 \section{Machine Learning Experimentation} \label{sec:ml-experimentation}
-\lipsum[1]
+
+\begin{center}\textbf{--> HERE <---}\end{center}
+
+It is the first time Company A is involved in a machine learning project with the goal to model its customer's behavior. As such, all types of models and architectures are possible. In this project, it has been decided to start with linear models and a simple set of features. The first goal is to evaluate the feasibility of the task, given that predicting orders for such particular product is not a trivial exercise.
 
 \subsection{Linear models}
 \lipsum[2]
