@@ -278,6 +278,40 @@ The first one consist of reducing the data by removing entries related to accoun
 To summarize this section about experimenting several models available with \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor which after a fine-tuning phase outputs predictions with a \textbf{F1-score of 0.715}.
 
 \subsection{Neural Networks}
+The \textit{ExtraTree} model has a big flaw: it's only using six features and none about weather or product's price. When trying to add those kind of features, the model wasn't as efficient as before. Therefore, a new type of machine learning model has been investigated: Neural Networks. Build with the Keras framework, six different architectures of Neural Networks have been experimented, all based on fully-connected layers. Similar to what has been done with previous models, several set of manually selected features have been used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and scoring \texttt{0.811} with the test data. All results and details of models tested are reported in annex XXX.
+
+Once that the model architecture has been chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the baseline model of previous phase (table XXX-annex), first optimize the training batch size, then the activation function of hidden layers, model's compiler loss function and finally the model compiler. Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{l|l|l}
+        \textbf{Model part}           & \textbf{Parameter}                 & \textbf{Value}         \\ \hline
+        Training                      & Number of epochs                   & 8                     \\
+                                      & Input dimension                    & (X,22)                     \\ \hline
+        Hidden layers                 & Number of neurons                  & 200-100-30                     \\
+                                      & Activation function                & selu                     \\
+                                      & Use bias                           & No                     \\ \hline
+        \multicolumn{1}{l|}{Compiler} & \multicolumn{1}{l|}{Loss function} & \multicolumn{1}{l}{msle} \\
+        \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{Optimizer}     & \multicolumn{1}{l}{adam}
+    \end{tabular}
+    \caption{Neural Network parameters for training final model}
+    \label{tab:nn-final-parameters}
+\end{table}
+
+
+\subsection{LSTM}
+
+
+
+1. Why ? Motivation?
+    Flaw of previous model is that they are not really account generic. Of course there is some account-specific features, but those are not enough to catch some use case. For example, if an account is used to make a big order in June, then a small order in September and ordering in the same fashion each 15 months, the model will most probably not able to catch some behavior. That's the main motivation for using Long-Short Term Memory (LSTM) networks in this project. Part of the Recurrent Networks family, LSTMs are able to retain such connection with a specified amount of time.
+
+2. Data reshape
+    Previously, the neural network was expecting a two-dimensions inputs, but LSTM only deals with three-dimensionalities input: \texttt{[batch size, step, features]}. There is a need to reshape the data into one entry per account. That exactly what has been done: all entries related to the same account have been sorted by the (month,year) they are related to and combined in such way.
+
+3. Results
+    Trained witht the features giving best predictions for model from previous section. Better at first, but not in the fine-tuning phase.
+
 
 \subsection{Best model evaluation}
 
