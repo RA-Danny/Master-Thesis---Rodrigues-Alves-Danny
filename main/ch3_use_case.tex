@@ -95,6 +95,8 @@ Based on this classes assignment, a confusion matrix can be generated. Then, cus
 
 In the formulas above, $t_i\_p_j$ correspond to the sum of true orders occurring in \texttt{i} months and predicted to occur in \texttt{j} months. For example $t_0\_p_0$ corresponds to the count of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
 
+The dataset will be divided into training, testing and validation sets. The training set is composed of data associated to orders that took place between 2013 and 2016 and will be used to train all models. Data related to orders that occured in 2017 form the testing set, use to test each model created. Finally, data that come from orders made from January 2018 to Juin 2018 are in the validation dataset, only used once to compute the final score.
+
 The metric \textbf{F1-score} will be the benchmark metric for this project.
 
 % -------------------------------- Section: Data
@@ -197,25 +199,87 @@ Each row in the final machine learning data is composed of three types of featur
 
 The exhaustive list of the 122 features build can be found in annex \ref{annex:features-for-ml}. Those features were created based on \textit{Company A} knowledge of its business, meetings with the marketing team and analyses of \textit{Customer Journeys}. A \textit{Customer Journey} is a plot where all orders of a selected account are visible, with the \texttt{Weather} and \texttt{Price} information through the months (see an example in figure \ref{fig-annex:customer-journey}). 
 
-Fetures were also created after a trial and error phase in the process of builidng and validating machine learning arhcitectures.
+Features were also created after a trial and error phase in the process of building and validating machine learning architectures. The property \texttt{feature\_importances\_} of \textit{Sklearn}'s models was also used to rank features and build new ones based on it.
 
 
 
 % -------------------------------- Section: Machine Learning Experimentation
 \section{Machine Learning Experimentation} \label{sec:ml-experimentation}
 
-\begin{center}\textbf{--> HERE <---}\end{center}
+It is the first time Company A is involved in a machine learning project with the goal to model its customer's behavior. As such, all types of models and architectures are possible. In this project, it has been decided to start with several types of models and a simple set of features. The first goal is to evaluate the feasibility of the task and the family of machine learning models best suited for it. 
 
-It is the first time Company A is involved in a machine learning project with the goal to model its customer's behavior. As such, all types of models and architectures are possible. In this project, it has been decided to start with linear models and a simple set of features. The first goal is to evaluate the feasibility of the task, given that predicting orders for such particular product is not a trivial exercise.
 
-\subsection{Linear models}
-\lipsum[2]
+\subsection{Models experiments}
+Python' package \textit{Scikit-learn} was used to build the models of this section. Thanks to Scikit-learn offered ease for testing different models, several families of supervised learning models have been investigated, with results reported on table \ref{tab:scores-simple-models}. Among the models investigated, there are \texttt{Liner models} (linear regression), \texttt{Tree models} (extra tree and decision tree), \texttt{Ensemble models} (random forest, extra trees, gradient boost and bagging regressor) and \texttt{Neighbors models} (KNeighbors regressor).
+
+In this initial phase, all models have been trained with scikit-learn's default parameters and a subset of 17 features manually selected\footnote{Those features are marked with an * in annex \ref{annex:features-for-ml}}. For all models created in this project, the same seed value has been used.
+
+\begin{table}[!htb]
+    \begin{tabular}{l|lll|lll}
+                          & \multicolumn{3}{c|}{Train}                         & \multicolumn{3}{c}{Test}      \\
+        \textbf{Model name}        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+        Extra Tree        & 0.996     & 0.999  & 0.998                         & 0.324     & 0.389  & 0.354    \\
+        Decision Tree     & 0.996     & 0.999  & 0.997                         & 0.267     & 0.394  & 0.318   \\
+        KNeighbors        & 0.303     & 0.908  & 0.455                         & 0.131     & 0.508  & 0.208    \\
+        Random Forest     & 0.696     & 0.998  & 0.820                         & 0.046     & 0.829  & 0.088    \\
+        Bagging Regressor & 0.699     & 0.998  & 0.822                         & 0.045     & 0.829  & 0.084    \\
+        ExtraTrees        & 0.996     & 0.999  & 0.998                         & 0.044     & 0.829  & 0.083    \\
+        Linear Regression & 0.011     & 0.187  & 0.021                         & 0.028     & 0.305  & 0.051    \\
+        Gradient Boosting & 0.000     & 0.000  & 0.000                         & 0.000     & 0.000  & 0.000    \\
+    \end{tabular}
+    \caption{Prediction scores for first models, ranked by their F1-score on testing set}
+    \label{tab:scores-simple-models}
+\end{table}
+
+The first observation is that F1-scores aren't high and more than half of the models have a score below 0.10. It's also noticeable that all models are overfitting too much, except for the linear regression. The two tree models are giving the best predictions, with a good trade-off between precision and recall, where the ensemble models are very confident in their predictions (recall score above 80\%), but too cautious and catch less than 5\% of the orders.
+
+The next experiments are related to the set of features used. With the predictions based on \texttt{Extra Tree} models, several features selection techniques have been used: Univariate selection where features are scored with the \textit{f\_regression}, Principal Component Analysis (PCA) and feature importance based on an \textit{ExtraTrees} model. The best F1-score turned out to be obtain with six features selected through the \textit{ExtraTrees} model. With a score of \texttt{0.636}, the model trained with only six features achieves a score almost twice as good as the one obtain previously. It's noticeable that the model gives it's better predictions when using a small number of features, as reported in figure \ref{fig:feature-selection}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=15cm]{images/feature_selection.png}
+    \caption[F1-score based on feature selection]{F1-score obtain on testing set with three different strategies for features selection}
+    \label{fig:feature-selection}
+\end{figure}
+
+After optimizing the set of features, \textit{ExtraTree} regressor's internals parameters can also be optimized. The primary goal is to reduced the overfitting produced by the tree. Two parameters have been fined-tuned: \texttt{max\_depth} and \texttt{min\_samples\_split}. The \texttt{max\_depth} parameter has no value by default, therefore the tree expand itself until all leaves are pure, explaining the overfitting on training data. The \texttt{min\_samples\_split} parameter controls the minimum number of samples required for a node to be split at the depth level below. Most relevant results of this fine-tuning phase are reported in table \ref{tab:tree-fine-tune}.
+
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{c|c|c|c}
+    \textbf{Max depth} & \textbf{Min samples split} & \textbf{Training F1-score} & \textbf{Testing F1-score} \\ \hline
+    30	&  70   &  	0.738  &  0.715 \\
+    50	&  100  &  	0.729  &  0.713 \\
+    80	&  100  &  	0.729  &  0.713 \\
+    30	&  100  &  	0.730  &  0.711 \\
+    30	&  50   &  	0.748  &  0.710 \\
+    50	&  70   &  	0.739  &  0.710 \\
+    80	&  70   &  	0.739  &  0.710 \\
+    50	&  50   &  	0.749  &  0.707 \\
+    80	&  50   &  	0.749  &  0.707 \\
+    30	&  10   &  	0.828  &  0.696 \\
+    50	&  10   &  	0.854  &  0.683 \\
+    80	&  10   &  	0.854  &  0.683 \\
+    10	&  100  &  	0.449  &  0.466 \\
+    10	&  10   &  	0.470  &  0.396 \\
+    10	&  50   &  	0.439  &  0.388 \\
+    10	&  70   &  	0.378  &  0.364 
+    \end{tabular}
+    \caption{F1 scores for training and testing data. Parameters tested are the \texttt{max\_depth} and \texttt{min\_samples\_split}. Table sorted by decreasing testing score.}
+    \label{tab:tree-fine-tune}
+\end{table}
+
+With the best combination of \texttt{max\_depth} and \texttt{min\_samples\_split}, the model reaches a F1-score of 0.715 with the testing data. It's also noticeable that the model is not overfitting anymore, with similar results on the training data.
+
+
+Alongside with experiment models and new parameters, optimizing the data to train model has been experiment. Until now, data-related optimization have only concern the features set, but there are some others possibilities. By investigating the data, three possible ways to reshape it were found. 
+The first one consist of reducing the data by removing entries related to accounts with less than five entries. Then, for the remaining accounts, take only five random entries. The goal is to reduce the potential influence of accounts ordering very often and also reduce the potential noise in the data bring by accounts with very few entries. A second attempt to reduce the influence of \textit{extreme} accounts is to simply remove all accounts ordering every month or every two months. The third and last experiment to reshape the data is to have the same number of entries per output, in an attempt to standardize the output. All this three attempts to reshape the data never improved the F1-score previously obtained.
+
+To summarize this section about experimenting several models available with \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor which after a fine-tuning phase outputs predictions with a \textbf{F1-score of 0.715}.
 
 \subsection{Neural Networks}
-\lipsum[3]
 
-\subsection{Best model analysis}
-\lipsum[3]
+\subsection{Best model evaluation}
 
 
 % -------------------------------- Section: Deployment
@@ -223,16 +287,12 @@ It is the first time Company A is involved in a machine learning project with th
 How to use machine learning predictions within a Dynamics 365 CRM, based on Azure products
 
 \subsection{Azure Architecture}
-\lipsum[2]
 
 \subsection{Integration with Dynamics 365}
-\lipsum[3]
 
 
 % -------------------------------- Section: Further Work
 \section{Further Work} \label{sec:use-case-further-work}
-\lipsum[1]
 
 % -------------------------------- Section: Conclusion
 \section{Conclusion} \label{sec:use-case-conclusion}
-\lipsum[1]
