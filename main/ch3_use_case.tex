@@ -278,9 +278,9 @@ The first one consist of reducing the data by removing entries related to accoun
 To summarize this section about experimenting several models available with \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor which after a fine-tuning phase outputs predictions with a \textbf{F1-score of 0.715}.
 
 \subsection{Neural Networks}
-The \textit{ExtraTree} model has a big flaw: it's only using six features and none about weather or product's price. When trying to add those kind of features, the model wasn't as efficient as before. Therefore, a new type of machine learning model has been investigated: Neural Networks. Build with the Keras framework, six different architectures of Neural Networks have been experimented, all based on fully-connected layers. Similar to what has been done with previous models, several set of manually selected features have been used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and scoring \texttt{0.811} with the test data. All results and details of models tested are reported in annex XXX.
+The \textit{ExtraTree} model has a big flaw: it's only using six features and none about weather or product's price. When trying to add those kind of features, the model wasn't as efficient as before. Therefore, a new type of machine learning model has been investigated: Neural Networks. Build with the Keras framework, six different architectures of Neural Networks have been experimented, all based on fully-connected layers. Similar to what has been done with previous models, several set of manually selected features have been used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and scoring \texttt{0.811} with the test data. All results and details of models tested are reported in annex \ref{annex:nn-experiments}.
 
-Once that the model architecture has been chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the baseline model of previous phase (table XXX-annex), first optimize the training batch size, then the activation function of hidden layers, model's compiler loss function and finally the model compiler. Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
+Once that the model architecture has been chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the baseline model of previous phase (table XXX-annex), first optimize the training batch size, then the activation function of hidden layers, model's compiler loss function and finally the model compiler (results reported in annex \ref{annex:nn-fine-tuning}). Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
 
 \begin{table}[]
     \centering
@@ -300,20 +300,37 @@ Once that the model architecture has been chosen, internal parameters of the mod
 
 
 \subsection{LSTM}
+A flaw present in previous models is that they are not account specific. Of course there are some account-specific features, but those are not enough to catch some use case. Let's assume that an account has a specific ordering strategy: make a big order in June, then make a new but smaller order in September and repeating the same ordering strategy each 15 months. For such account, the previous model will most probably not be able to catch its behavior with the features used. That's the main motivation for using Long Short-Term Memory (LSTM) networks in this project. Being part of the Recurrent Neural Networks (RNN) family, LSTMs have the ability to recognize patterns in sequences of data. This is a different problem compared to other types of supervised learning as sequences impose an order on observations.
 
+To be able to use LSTMs, the data need to be reshaped. Previous models were expecting two-dimension input, but LSTMs required data to be in three-dimensions form: \texttt{[batch size, time steps, hidden size]}. To reshape the data, all entries related to the same account have been sorted by month and year (as detailed in section \ref{sec:data-shape-for-ml}, all entries are \textit{linked} to a given month). Among all these entries, one has been taken randomly and will be consider as the last \textit{step} of the LSTM data, while all entries occurring before will be considered as previous steps. Figure \ref{fig:lst-data-build} sketch this process. In order to have a dataset that a computer can still handle, the LSTM data is composed of a maximum of five entries per account and each entries has a maximum of 15 steps (15 monthly data).
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=10cm]{images/lstm-data-build.png}
+    \caption[LSTM data build]{Example of reshaping the data for LSTM models. From the initial data, the fourth entry has been selected randomly and is placed as the last step of the data.}
+    \label{fig:lst-data-build}
+\end{figure}
 
-1. Why ? Motivation?
-    Flaw of previous model is that they are not really account generic. Of course there is some account-specific features, but those are not enough to catch some use case. For example, if an account is used to make a big order in June, then a small order in September and ordering in the same fashion each 15 months, the model will most probably not able to catch some behavior. That's the main motivation for using Long-Short Term Memory (LSTM) networks in this project. Part of the Recurrent Networks family, LSTMs are able to retain such connection with a specified amount of time.
+Similar to the experiments with previous neural networks, several model architectures have been used to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM one. With the first experiments, results were similar to the one obtained with only fully-connected layers but on the batch size fine-tuning phase, results didn't improve the testing F1-score. Results are available in annex \ref{annex:lstm-experiments}.
 
-2. Data reshape
-    Previously, the neural network was expecting a two-dimensions inputs, but LSTM only deals with three-dimensionalities input: \texttt{[batch size, step, features]}. There is a need to reshape the data into one entry per account. That exactly what has been done: all entries related to the same account have been sorted by the (month,year) they are related to and combined in such way.
-
-3. Results
-    Trained witht the features giving best predictions for model from previous section. Better at first, but not in the fine-tuning phase.
 
 
 \subsection{Best model evaluation}
+
+The best model is a Neural Network composed of three fully connected hidden layers with 200, 90 and 30 neurons. Trained with the parameters reported in table \ref{tab:nn-final-parameters}, it achieves the following scores:
+
+\noindent\hspace*{0.8cm}  1. \texttt{Training data}:   F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX \\
+\hspace*{0.8cm}           2. \texttt{Testing data}:    F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX \\
+\hspace*{0.8cm}           3. \texttt{Validation data}: F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX
+
+As explained in section \ref{sec:ml-metrics}, this is a regression problem, but scored with metrics used for classification tasks. The confusion matrix for the validation data is presented in figure XXX.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=7cm]{images/cf-matrix-validation.png}
+    \caption[Confusion matrix for validation data]{Confusion matrix for the validation data obtain with the best model}
+    \label{fig:lst-data-build}
+\end{figure}
 
 
 % -------------------------------- Section: Deployment

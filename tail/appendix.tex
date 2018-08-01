@@ -119,8 +119,170 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
 
 \begin{figure}[h]
     \centering
-    \hspace*{-3.5cm}
+    \hspace*{-2cm}
     \includegraphics[width=20cm]{images/customer-journey.png}
     \caption{Example of a customer journey plot}
     \label{fig-annex:customer-journey}
 \end{figure}
+
+
+
+% --------------- NN experiments
+\chapter{Neural Network experiments}
+\label{annex:nn-experiments}
+
+\textbf{Sketch of a simple neural network:}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{images/nn-sketch.png}
+    \caption{Sketch a the Neural Network architecture composed of fully-connected layers.}
+    \label{fig-annex:nn-sketch}
+\end{figure}
+
+\textbf{Models used:}\\
+\texttt{Model 1}: One hidden layer composed of 90 neurons. \\
+\texttt{Model 2}: One hidden layer composed of 200 neurons. \\
+\texttt{Model 3}: Two hidden layers composed of 90 and 30 neurons respectively. \\
+\texttt{Model 4}: Three hidden layers composed of 90, 60 and 30 neurons respectively. \\
+\texttt{Model 5}: Three hidden layers composed of 200, 90 and 30 neurons respectively. \\
+
+\textbf{Set of features used:}\\
+\texttt{Features 1}: Set of features composed of the entire XXX features created. \\
+\texttt{Features 2}: Set of 41 features related to account, previous order and current month with price and weather data. \\
+\texttt{Features 3}: Set of 20 features similar to set 2 but without account features. \\
+\texttt{Features 4}: Set of 10 features related to account, previous order and current month but without price and weather information. \\
+\texttt{Features 5}: Set of 23 features similar to set 4 but with price and weather data. \\
+\texttt{Features 6}: Set of 16 features similar to set 4 but with price data. \\
+\texttt{Features 7}: Set of 19 features similar to set 4 but with weather data. \\
+
+\textbf{Results:}
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        \textbf{Model} & \textbf{Features} & \textbf{Best epoch} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+        Model 5     &   	Features 5      &   	6       &   	0.8029  &   	0.8029  &   	0.8029  \\
+        Model 4     &   	Features 4      &   	8       &   	0.8028  &   	0.8028  &   	0.8028  \\
+        Model 5     &   	Features 4      &   	7       &   	0.8027  &   	0.8027  &   	0.8027  \\
+        Model 4     &   	Features 5      &   	6       &   	0.7988  &   	0.7988  &   	0.7988  \\
+        Model 5     &   	Features 7      &   	9       &   	0.7984  &   	0.7984  &   	0.7984  \\
+        Model 5     &   	Features 6      &   	7       &   	0.7966  &   	0.7966  &   	0.7966  \\
+        Model 4     &   	Features 7      &   	8       &   	0.7946  &   	0.7946  &   	0.7946  \\
+        Model 4     &   	Features 6      &   	7       &   	0.7914  &   	0.7914  &   	0.7914  \\
+        Model 2     &   	Features 4      &   	9       &   	0.7810  &   	0.7810  &   	0.7810  \\
+        Model 2     &   	Features 7      &   	4       &   	0.7805  &   	0.7805  &   	0.7805  \\
+        Model 3     &   	Features 5      &   	6       &   	0.7776  &   	0.7776  &   	0.7776  \\
+        Model 1     &   	Features 4      &   	6       &   	0.7759  &   	0.7759  &   	0.7759  \\
+        Model 3     &   	Features 4      &   	7       &   	0.7752  &   	0.7752  &   	0.7752  \\
+        Model 1     &   	Features 7      &   	7       &   	0.7749  &   	0.7749  &   	0.7749  \\
+        Model 2     &   	Features 5      &   	8       &   	0.7741  &   	0.7741  &   	0.7741  \\
+        Model 1     &   	Features 5      &   	9       &   	0.7718  &   	0.7718  &   	0.7718  \\
+        Model 3     &   	Features 7      &   	8       &   	0.7704  &   	0.7704  &   	0.7704  \\
+        Model 5     &   	Features 1      &   	0       &   	0.7669  &   	0.7669  &   	0.7669  \\
+        Model 2     &   	Features 6      &   	8       &   	0.7650  &   	0.7650  &   	0.7650  \\
+        Model 3     &   	Features 6      &   	4       &   	0.7632  &   	0.7632  &   	0.7632  \\
+        Model 1     &   	Features 6      &   	6       &   	0.7611  &   	0.7611  &   	0.7611  \\
+        Model 5     &   	Features 2      &   	0       &   	0.7513  &   	0.7513  &   	0.7513  \\
+        Model 4     &   	Features 2      &   	9       &   	0.7425  &   	0.7425  &   	0.7425  \\
+        Model 4     &   	Features 1      &   	0       &   	0.7360  &   	0.7360  &   	0.7360  \\
+        Model 2     &   	Features 2      &   	4       &   	0.7218  &   	0.7218  &   	0.7218  \\
+        Model 1     &   	Features 2      &   	8       &   	0.7190  &   	0.7190  &   	0.7190  \\
+        Model 1     &   	Features 1      &   	1       &   	0.7168  &   	0.7168  &   	0.7168  \\
+        Model 3     &   	Features 2      &   	3       &   	0.7142  &   	0.7142  &   	0.7142  \\
+        Model 2     &   	Features 1      &   	0       &   	0.7124  &   	0.7124  &   	0.7124  \\
+        Model 3     &   	Features 1      &   	0       &   	0.6822  &   	0.6822  &   	0.6822  \\
+        Model 5     &   	Features 3      &   	5       &   	0.5581  &   	0.5581  &   	0.5581  \\
+        Model 3     &   	Features 3      &   	1       &   	0.5222  &   	0.5222  &   	0.5222  \\
+        Model 2     &   	Features 3      &   	2       &   	0.5159  &   	0.5159  &   	0.5159  \\
+        Model 4     &   	Features 3      &   	5       &   	0.5143  &   	0.5143  &   	0.5143  \\
+        Model 1     &   	Features 3      &   	3       &   	0.5007  &   	0.5007  &   	0.5007  \\
+    \end{tabular}
+    \caption{Results for the model's architecture and features experiments. Scores retrieved with the testing dataset. Table sorted by decreasing Testing F1-score.}
+    \label{tab-annex:nn-experiments}
+\end{table}
+
+
+\textbf{Comments:}\\
+Bla bla bla
+
+
+
+% --------------- NN fine-tuning results
+\chapter{Neural Network fine-tuning results}
+\label{annex:nn-fine-tuning}
+
+The fine-tuning phase is decomposed into four parts, each part related to a parameter.
+
+Note that on the results below, the F1-score is decreasing some times, even by keeping the best configuration. This is a well known issue when using Keras model: there is still some part of randomness that cannot be fixed, even with seed! REF REF REF
+
+\begin{enumerate}
+    \item Activation function
+        \begin{table}[!h]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c}
+            \textbf{Activation function} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+            Linear      &   	0.8029  &   	0.8029  &   	0.8029  \\
+            tanh        &   	0.8028  &   	0.8028  &   	0.8028  \\
+            softmax     &   	0.8027  &   	0.8027  &   	0.8027  \\
+            elu         &   	0.8029  &   	0.8029  &   	0.8029  \\
+            softmax     &   	0.8028  &   	0.8028  &   	0.8028  \\
+            relu        &   	0.8027  &   	0.8027  &   	0.8027  \\
+            selu        &    	0.8029  &   	0.8029  &   	0.8029  \\
+            softplus    &   	0.8028  &   	0.8028  &   	0.8028  \\
+            softsign    &   	0.8027  &   	0.8027  &   	0.8027  \\
+            sigmoid     &   	0.8029  &   	0.8029  &   	0.8029  \\
+            hard sigmoid        &   	0.8028  &   	0.8028  &   	0.8028  \\
+            \end{tabular}
+            \caption{Results the fine-tuning of the activation function. Scores retrieved with the testing dataset.}
+        \end{table}
+    
+    \item Loss function
+        \begin{table}[!h]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c}
+                \textbf{Loss function} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+                mean absolute error      &   	0.8029  &   	0.8029  &   	0.8029  \\
+                mean squarred error        &   	0.8028  &   	0.8028  &   	0.8028  \\
+                mape     &   	0.8027  &   	0.8027  &   	0.8027  \\
+                msle         &   	0.8029  &   	0.8029  &   	0.8029  \\
+                kid     &   	0.8028  &   	0.8028  &   	0.8028  \\
+                cosine        &   	0.8027  &   	0.8027  &   	0.8027  \\
+                categorical hinge        &    	0.8029  &   	0.8029  &   	0.8029  \\
+                logcosh    &   	0.8028  &   	0.8028  &   	0.8028  \\
+            \end{tabular}
+            \caption{Results the fine-tuning of the loss function. Scores retrieved with the testing dataset.}
+        \end{table}
+        
+        
+    \item Optimizer
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c}
+                \textbf{Optimizer} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+                adam      &   	0.8029  &   	0.8029  &   	0.8029  \\
+                sgd        &   	0.8028  &   	0.8028  &   	0.8028  \\
+                rmsprop     &   	0.8027  &   	0.8027  &   	0.8027  \\
+                adagrad         &   	0.8029  &   	0.8029  &   	0.8029  \\
+                adamax     &   	0.8028  &   	0.8028  &   	0.8028  \\
+            \end{tabular}
+            \caption{Results the fine-tuning of the optimizer choice. Scores retrieved with the testing dataset.}
+        \end{table}
+
+
+    \item Bias usage
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c}
+                \textbf{Bias} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+                True      &   	0.8029  &   	0.8029  &   	0.8029  \\
+                False        &   	0.8028  &   	0.8028  &   	0.8028  \\
+            \end{tabular}
+            \caption{Results the fine-tuning for the bias usage. Scores retrieved with the testing dataset.}
+        \end{table}
+        
+        
+    \end{enumerate}
+
+
+% --------------- LSTM results
+\chapter{LSTM experiments}
+\label{annex:lstm-experiments}
