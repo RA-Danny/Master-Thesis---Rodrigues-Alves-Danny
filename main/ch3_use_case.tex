@@ -335,12 +335,50 @@ As explained in section \ref{sec:ml-metrics}, this is a regression problem, but 
 
 % -------------------------------- Section: Deployment
 \section{Deployment} \label{sec:crm-deployment}
-How to use machine learning predictions within a Dynamics 365 CRM, based on Azure products
+Once the final machine learning model has been build and tested, its results must be integrated within the Dynamics 365 instance of \textit{Company A}. The end goal is to have a prediction for each account regarding the date of the next order. For this, two ways to make account predictions were defined:
+\begin{itemize}
+    \item Run the predictions every first Saturday for every month
+    \item Run the predictions for a specific account directly for the CRM interface, at anytime.
+\end{itemize}
+
+Both integration will be supported by \textit{Azure} services.
 
 \subsection{Azure Architecture}
+To deploy the model, four Azure cloud services are used: Functions, Queue Storage, Web App and Application Insights. Azure Functions enable to run code on a serverless architecture and for it to be scaled, the Azure Queue Storage is a service to store large number of messages to be consumed via HTTP call, Azure Web App creates web application with built-in autoscale and Azure Applications Insights is used to analyze performances, errors and logs messages. The connection between those services and Dynamics 365 are sketch in figure \ref{fig:azure-deployment}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=12cm]{images/azure-archi-weekly.png}
+    \caption[Deployment architecture for scheduled predictions]{Connection between Azure services and Dynamics 365 to compute predictions on a recurring basis.}
+    \label{fig:azure-deployment}
+\end{figure}
+
+\noindent The architecture used to integrate machine learning predicitons inside Dynamics 365 contains the further steps:
+\vspace*{-\baselineskip}
+\begin{enumerate}[label=\texttt{\arabic*.}]
+    \setcounter{enumi}{-1}
+    \item The first Saturday of each month, at 03:00, the entire process is triggered.
+    \item A first Azure Function will retrieve all accounts for Dynamics 365, via the Web Api. Only active accounts with at least three orders are retrieved.
+    \item Once all accounts have been retrieved, they are added into a queue stored as an Azure Queue Storage.
+    \item A second Azure Function is trigger each time new items are added into the Azure Queue Storage. This function will retrieve five accounts per run.
+    \item The Azure Function retrieves the predictions for the five accounts with an HTTP request to the Web App.
+    \item The Web App holds the entire logic of the prediction. Build in Python, it makes used of the \textit{Flask} microframework to create HTTP endpoints. When the Web App receives the accounts for the Azure function, it will connect to the CRM and build the data to give to the machine learning model. This model is stored in the Web App and used against the data just created. Predictions are then returned to the Azure Function.
+    \item Once the Azure Function gets the predictions, it updates the CRM.
+\end{enumerate}
+
+One advantages of using this architecture is the connection between the Azure Queue Storage and the second Azure Function. It enables accounts to be consumed at a desired pace, in such a way to not overload the others components (Web App and CRM), to make the predictions before reaching the built-in of timeout Azure Functions and also to have another queue containing failures. In case of an error during the process, accounts for which the predictions weren't computed are added to a queue, in such way that they do not stop the entire process. For each step, Azure Application Insights are used to store logs.
+
+Experiments with this architecture showed a total running time of approximately 8 hours for more than 100'000 accounts. Compared to others services powered by Azure like the \textit{Azure Machine Learning}' suite, this architecture is significantly less expensive.
+
+The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, a JavaScript file stored in a Dynamics 365 Web resource is sending an HTTP request to the Web App, which computes the prediction.
 
 \subsection{Integration with Dynamics 365}
-
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=12cm]{images/dynamics-account.png}
+    \caption[Dynamics 365 \textit{Account} entity page]{Dynamics 365 Account entity page. The part related to the model predictions is in the blue rectangle. It contains two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}, as well as a button \texttt{Run prediction}.}
+    \label{fig:dynamics-account-ml-screenshot}
+\end{figure}
 
 % -------------------------------- Section: Further Work
 \section{Further Work} \label{sec:use-case-further-work}
