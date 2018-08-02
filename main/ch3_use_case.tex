@@ -22,22 +22,30 @@ This chapter details the entire machine learning project. Sections \ref{sec:use-
 % -------------------------------- Section: Project outline
 \section{Formalize machine learning problem} \label{sec:ml-metrics}
 
-As defined in section \ref{sec:use-case}, the goal of this initiative is to build a machine learning model that predicts the time of a customer's next order. This problem can be formalize as a regression problem, for which the machine learning model will output the date of next order: at date $d$, the model will predict $i$, the number of days until next order. So $d+i$ will give the precise data of customer next order. Variants are to define $i$ as the number of weeks or months until next order. The date will be less precise but the predictions might turn out to be more satisfying. Another possibility is to formalize it as a classification task and output a binary value to the question : \textit{"Will this customer make an order in the coming day/week/month ?"}. After discussion with \textit{Contoso}, it has been decided to define the output of the model as \textit{the number of months until customer next order}. In details, it has been decided first to work with regression models to have multiple ranges of outputs. Then, for the output's granularity (day, week or month), predicting the number of month until next order \textit{should} give stronger results. It will allow \textit{Contoso} to asses how well a regression techniques are suited for this problem and, in a second phase, trying to have more precise predictions, with an output at the week level for example.
 
-From the machine learning output, Contoso wants to reach customers before they make an order. The process is planned as follow:
-\begin{enumerate}
-    \item At the beginning of each month, compute the predictions for all active clients\footnote{An client is flagged as inactive if no more business can be made with him/her (moving abroad or death for example)}.
-    \item Retrieve all clients with a predictions smaller than $2$.
-    \item Get in touch with these clients if and only if they have not been contacted in the past two months.
-\end{enumerate}
-The last step of this process is very important, as it will ensure that the company won't reach the same client twice.
+\subsection{Problem definition}
+As defined in the previous section, the goal of this initiative is to build a machine learning model that predicts the time of a customer's next order. This problem can be formalized as a regression problem, for which the machine learning model will output the date of next order: at date $d$, the model will predict $i$, the number of days until next order. So $d+i$ will give the precise date of a customer's next order. Variants are to define $i$ as the number of weeks or months until next order. The date will be less precise but the predictions might turn out to be more satisfying. Another possibility is to formalize it as a classification task with a binary outcome: \textit{"Will this customer make an order in the coming day/week/month ?"}. After discussion with Contoso, it has been decided to define the output of the model as \textit{the number of months until customer's next order}. In details, it has been decided first to work with regression models to have multiple ranges of outputs. Then, for the output's granularity (day, week or month), predicting the number of months until next order \textit{should} give stronger results. It will allow Contoso to asses the extent to which regression techniques and models are suited to this problem and, if the first phase is successful, try to improve the predictions with outputs at the week level.
 
 
-Now that the machine learning goal and usage have been specified, the metrics for its success must be defined. As stated above, this is a regression model, where the output will be a real number. Usual metrics for regression problems like Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE) are not well suited for this project and for the usage of the predictions by \textit{Contoso}. As specified above, the company plans to get in touch with a client only if the predictions is below $2$. Therefore, if the output of a model is equal to $7.0$ months or $4.35$, it ends up being the same for \textit{Contoso}. This explains why RMSE or MAE cannot be used to evaluate machine learning models performance. As regression metrics are not applicable, the models will be assess with custom metrics inspired by classification problems: precision, recall and F1 score. 
 
-To transform the regression problem into a classification one, model's predictions will be classify into one of the following four classes: \texttt{0, 1, 2 or 3+}. The class \texttt{0} is meant for predictions between 0 and 1 (excluded) - clients that should make an order in the current month. Same idea for classes \texttt{1} and \texttt{2}. The class \texttt{3+} regroups all predictions with an output bigger or equal to 3 - client next order should occur in three or more months.
+\subsection{Predictions usage}
+Based on the machine learning predictions, Contoso wants to reach customers before they make an order. The process is planned as follow:
 
-\begin{adjustwidth}{-1cm}{}
+\noindent\hspace*{0.8cm}  \texttt{1.} At the beginning of each month, compute the predictions for all active clients\footnote{A client is flagged as inactive if no more business can be made with him/her (in case of death or moving abroad for example)}. \\
+\hspace*{0.8cm}           \texttt{2.} Fetch all clients with a prediction smaller than $2$ (order in current or coming month). \\
+\hspace*{0.8cm}           \texttt{3.} Contact these clients only if they have not been contacted in the past two months.
+
+The last step of this process is very important, as it will ensure that the company will not approach the same client twice about the same subject in a very short period.
+
+
+\subsection{Machine learning scoring strategy}
+Now that the machine learning goal and usage have been specified, the metrics for its success must be defined. As stated above, this is a regression model with a real number as output. Usual metrics for regression problems like \textit{Mean Absolute Error} (MAE) or \textit{Root Mean Squared Error} (RMSE) are not well suited for this project and the usage of predictions made by Contoso. As specified above, the company plans to get in touch with a client only if the prediction is below $2$. Therefore, if the output of a model is equal to $7.0$ or $4.35$, it ends up being the same for Contoso. This explains why MAE or RMSE cannot be used to evaluate machine learning models performance. 
+
+As regression metrics are not applicable, models will be assessed with custom metrics inspired by classification tasks: precision, recall, and F1-score. 
+
+To transform the regression problem into a classification one, model's predictions are classified into one of the following four classes: \texttt{0, 1, 2 or 3+}. Class \texttt{0} is meant for predictions between 0 and 1 (excluded) - clients that should make an order in the current month. Same idea for classes \texttt{1} and \texttt{2}. Class \texttt{3+} regroups all predictions with an output bigger or equal to 3 - the client's next order should occur in three or more months and will not be used by Contoso.
+
+\begin{adjustwidth}{-1.7cm}{}
     \begin{minipage}[b]{0.60\linewidth}
     \resizebox{1.0\columnwidth}{!}{
         \begin{tabular}[t]{c|c|
@@ -62,7 +70,7 @@ To transform the regression problem into a classification one, model's predictio
     \hspace{1.0cm}
     \begin{minipage}[b]{0.45\linewidth}
         \offinterlineskip
-        \moveright 1cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{15cm}{True class\\[50pt]}}}\par}
+        \moveright 1cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{14cm}{True class\\[50pt]}}}\par}
         \hspace*{1cm}\MyHBoxT[\dimexpr5.1cm]{Predicted class}\vspace*{-0.4cm}
         \hspace*{1cm}\MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\vspace*{-0.2cm}
         \MyTBox{0}{2}{0}{1}{0}
@@ -75,29 +83,29 @@ To transform the regression problem into a classification one, model's predictio
 \end{adjustwidth}
 
 
-Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall and F1-score are computed:
+Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall, and F1-score are computed:
 \begin{itemize}
-    \item \textbf{Precision}: Of all clients that make an order in the current month, how many where predicted with class 0 or 1? This metric computes the percentage of true orders catch by the model. 
+    \item \textbf{Precision}: Of all clients that make an order in the current month, how many were predicted with class 0 or 1? This metric computes the percentage of true orders caught by the model. 
     $$ Precision = \frac{t_0\_p_0 + t_0\_p_1}{t_0\_p_0 + t_0\_p_1 + t_0\_p_2 + t_0\_p_{3+}} $$
     
-    For the example in table \ref{table:example_confusion_matrix}, the precision is equal to $\frac{2+0}{2+0+1+0} = 0.667$
+    For the example in table \ref{table:example_confusion_matrix}, precision is equal to $\frac{2+0}{2+0+1+0} = 0.667$
     
-    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make \textit{Contoso} contact all clients. 
+    \item \textbf{Recall}: From all clients that the model has predicted an order for the current month, how many did actually made an order in the current or coming month? The goal with this metric is to assert that the model is not always predicting 0, which will give a precision score of 100\%, but will make Contoso contact all clients. 
     $$ Recall = \frac{t_0\_p_0 + t_1\_p_0}{t_0\_p_0 + t_1\_p_0 + t_2\_p_0 + t_{3+}\_p_0} $$
     
-    For the example in table \ref{table:example_confusion_matrix}, the recall is equal to $\frac{2+1}{2+1+0+1} = 0.75$
+    For the example in table \ref{table:example_confusion_matrix}, recall is equal to $\frac{2+1}{2+1+0+1} = 0.75$
     
-    \item \textbf{F1-score}: Same as the F1-score for classification tasks. 
+    \item \textbf{F1-score}: Same as for classification tasks. The F1-score is a weighted average of the precision and recall.
     $$ \fscore = \frac{2*Precision*Recall}{Precision+Recall} $$
 
-    For the example in table \ref{table:example_confusion_matrix} the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
+    For the example in table \ref{table:example_confusion_matrix}, the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
 \end{itemize}
 
-In the formulas above, $t_i\_p_j$ correspond to the sum of true orders occurring in \texttt{i} months and predicted to occur in \texttt{j} months. For example $t_0\_p_0$ corresponds to the count of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
+In the formulas above, $t_i\_p_j$ corresponds to the sum of true orders occurring in $m+i$ months and predicted to occur in $m+j$ months, where $m$ is the current month. For example $t_0\_p_0$ corresponds to the sum of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
 
-The dataset will be divided into training, testing and validation sets. The training set is composed of data associated to orders that took place between 2013 and 2016 and will be used to train all models. Data related to orders that occured in 2017 form the testing set, use to test each model created. Finally, data that come from orders made from January 2018 to Juin 2018 are in the validation dataset, only used once to compute the final score.
+The metric \textbf{F1-score} will be the benchmark metric to compare models.
 
-The metric \textbf{F1-score} will be the benchmark metric for this project.
+The dataset used in this project is divided into training, testing and validation sets. The training set is composed of orders that took place between 2013 and 2016. It will be used to train all models. Data related to orders that occurred in 2017 form the testing set, use to test each model created. Finally, data associated with orders made from January 2018 to June 2018 are in the validation dataset, only used once to compute the final score in \ref{sec:best-model}.
 
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
@@ -316,6 +324,7 @@ Similar to the experiments with previous neural networks, several model architec
 
 
 \subsection{Best model evaluation}
+\label{sec:best-model}
 
 The best model is a Neural Network composed of three fully connected hidden layers with 200, 90 and 30 neurons. Trained with the parameters reported in table \ref{tab:nn-final-parameters}, it achieves the following scores:
 
