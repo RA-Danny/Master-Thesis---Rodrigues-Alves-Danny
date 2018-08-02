@@ -373,6 +373,8 @@ Experiments with this architecture showed a total running time of approximately 
 The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, a JavaScript file stored in a Dynamics 365 Web resource is sending an HTTP request to the Web App, which computes the prediction.
 
 \subsection{Integration with Dynamics 365}
+The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \textit{Account} entity page, a section \texttt{ML Predictions} was created with two fields: Next Order Prediction and Last refresh. The first field contains the predicted month of accounts next order and the date of when was the machine learning model run is displayed below. This allow CRM users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information have been added, predictions can be refreshed on-demand, by clicking the blue button \textit{Run predictions}. This button will be grayed out and inactive throughout the entire process (~ 5-10 seconds). No refresh or page reload is necessary, both fields will be updated automatically. If the process ends successfully, the button will turn out green, but if a mistake happened, the button will be red.
+
 \begin{figure}[!h]
     \centering
     \includegraphics[width=12cm]{images/dynamics-account.png}
@@ -380,8 +382,13 @@ The Azure Web App described above is also used to run the prediction for a speci
     \label{fig:dynamics-account-ml-screenshot}
 \end{figure}
 
+As the prediction is stored as a CRM field, it can be used to create Marketing lists. In Dynamics 365, creating a marketing list is usually the first step in a marketing campaign. For Company A use case, a marketing list containing all accounts with the field \textit{Next Order Prediction} happening in current or coming month can be created as a first step to contact accounts before they make an order and investigate competitor's offers.
+
+
 % -------------------------------- Section: Further Work
 \section{Further Work} \label{sec:use-case-further-work}
+
+
 
 % -------------------------------- Section: Conclusion
 \section{Conclusion} \label{sec:use-case-conclusion}
