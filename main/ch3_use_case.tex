@@ -173,17 +173,17 @@ Weather data has also an influence on the ordering patterns of clients, as shown
 
 
 \section{Data for the machine learning}
-Once that all data has been gathered, cleaned and analyzed, it needs to be shaped in such format that machine learning models can use it. This section detail how the data from \ref{sec:crm-data} has been combined and then reshaped to be given to machine learning models.
+The data for all CRM's entities need to be shaped so that the machine learning models can make use of it. This section details how the data from \ref{sec:crm-data} has been combined and then reshaped to be given to predictive models.
 
 \subsection{Dataset construction}\label{sec:data-shape-for-ml}
-As defined above, the model's output will be the number of months until customer next order and the model is planned to be used on a monthly basis. For all accounts, one entry per month is created, from the first month after client's first order until the month of last order. For all monthly entries, the output is the number of months until next customer order and the data contains features related to the account (shared among all entries), features related to the previous orders and features related to the current month, like the monthly weather for example. 
+As defined above, the model is planned to be used on a monthly basis and its output will be the number of months until customer's next order. For all accounts, one entry per month is created, from the month following client's first order until the month of last order and the output is the number of months until customer's next order. The data in these monthly entries contain features related to the account (shared among all entries), features related to the previous orders and features related to the current month, like the monthly weather for example. 
 
-Figure \ref{fig:data-build-example} contains an example of such data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the final ML dataset concerns May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and April 2014, date of account's second order. The same principle will be apply to all following months, until March 2016, date of the last order made by this account.
+Figure \ref{fig:data-build-example} contains an example of the data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the data relates to May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and March 2014, date of account's second order. The same principle is applied to all months, until March 2016, date of the last order made by this account.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=14cm]{images/data-build-ml-example.png}
-    \caption[Process to build data for machine learning]{Sketch of the ML model data building process. Yellow circles model account orders.}
+    \caption[Process to build data for machine learning]{Sketch of the process to build data for the machine learning models. Yellow circles model account's orders through time. The entry 1. corresponds to the month April 2013, the entry 17. to September 2014 and the entry 34. to February 2016.}
     \label{fig:data-build-example}
 \end{figure}
 
@@ -191,11 +191,11 @@ Figure \ref{fig:data-build-example} contains an example of such data creation pr
 % -------------------------------- Section: Customer Jounrey + Feature engineering
 \subsection{Feature engineering}\label{sec:ml-features}
 
-Before creating new features, all datasets must be combined together. Starting for right to left on figure \ref{fig:entity-diagram}, \texttt{Building} and \texttt{Contact} data are combined since a contact may be linked to one or multiple building (one-to-many relation). From the \textit{Building} entity, only one feature will be used: the volume of its reservoir, used to stock the product. In the case of multiple buildings being linked to the same account, the average capacity of all reservoirs will be computed and added to the contact data. 
+Before creating new features, all datasets must be combined together. Starting from right to left on figure \ref{fig:entity-diagram}, \texttt{Building} and \texttt{Reservoir} data are combined. If a \texttt{Building} is not linked to at least one \texttt{Reservoir}, it's discarded. Then the data is combined with the \texttt{Account} entity, a one-to-many relation (a given account can be linked to one or more buildings). From \texttt{Building} and \texttt{Reservoir}, only one feature is used: the volume of its reservoir. In the case of multiple buildings being linked to the same account, the average capacity of all reservoirs is considered.
 
-Then, the entities \texttt{Account} and \texttt{Contact} are combined based on the account primary contact, with its address and birth date added to the account. This combination of the \texttt{Account}, \texttt{Contact} and \texttt{Building} entities builds a first set of features, defined as \textit{account-related} features.
+Then, the entities \texttt{Account} and \texttt{Contact} are combined based on the account primary contact, with its address and birth date added to the account. This combination of the \texttt{Account}, \texttt{Contact}, \texttt{Building} and \texttt{Reservoir} entities builds a first set of features, defined as \textit{account-related} features.
 
-Each row in the final machine learning data is composed of three types of features: the \textit{account-related} ones, features related to the current month and features about the previous order. Features related to the current month are mainly build from the two external data to encapsulate the variations of the prices and the weather temperature through time. Finally, the previous order is also used to capture its characteristics, like "\textit{Was it a big or a small order}?" or "\textit{When did this order occurred compare to the one before?}".
+Each row in the final machine learning data is composed of three types of features: the \textit{account-related} ones, features related to the current month and features about the previous order. Features related to the current month are mainly built from the two external data to encapsulate the variations of price and weather temperature through time. Finally, some characteristics of account previous order are used, like "\textit{Was it a big or a small order}?" or "\textit{When did this order occurred compare to the one before?}".
 
 
 \begin{figure}[h]
@@ -205,9 +205,9 @@ Each row in the final machine learning data is composed of three types of featur
     \label{fig:data-build-row-example}
 \end{figure}
 
-The exhaustive list of the 122 features build can be found in annex \ref{annex:features-for-ml}. Those features were created based on \textit{Contoso} knowledge of its business, meetings with the marketing team and analyses of \textit{Customer Journeys}. A \textit{Customer Journey} is a plot where all orders of a selected account are visible, with the \texttt{Weather} and \texttt{Price} information through the months (see an example in figure \ref{fig-annex:customer-journey}). 
+The exhaustive list of the 122 features built can be found in annex \ref{annex:features-for-ml}. Those features are based on Contoso's knowledge of its business and analyses of \textit{Customer Journeys}. A \textit{Customer Journey} is a plot where all orders of a given account are visible, with the \texttt{Weather} and \texttt{Price} information through the months (see an example in figure \ref{fig-annex:customer-journey}). \textit{Customer Journeys} has been used as a starting point to understand the order's pattern of accounts, the influence of external data and the general behavior of Contoso's clients.
 
-Features were also created after a trial and error phase in the process of building and validating machine learning architectures. The property \texttt{feature\_importances\_} of \textit{Sklearn}'s models was also used to rank features and build new ones based on it.
+Some features have also been created after a trial and error phase while building and validating machine learning models. The property \texttt{feature\_importances\_} of \textit{Sklearn}'s models has also been used to rank features and build new ones based on it.
 
 
 
