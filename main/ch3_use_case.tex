@@ -180,9 +180,9 @@ As defined above, the model is planned to be used on a monthly basis and its out
 
 Figure \ref{fig:data-build-example} contains an example of the data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the data relates to May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and March 2014, date of account's second order. The same principle is applied to all months, until March 2016, date of the last order made by this account.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=14cm]{images/data-build-ml-example.png}
+\begin{figure}[!h]
+    \hspace{-1cm}
+    \includegraphics[width=17cm]{images/data-build-ml-example.png}
     \caption[Process to build data for machine learning]{Sketch of the process to build data for the machine learning models. Yellow circles model account's orders through time. The entry 1. corresponds to the month April 2013, the entry 17. to September 2014 and the entry 34. to February 2016.}
     \label{fig:data-build-example}
 \end{figure}
@@ -344,16 +344,16 @@ As explained in section \ref{sec:ml-metrics}, this is a regression problem, but 
 
 % -------------------------------- Section: Deployment
 \section{Deployment} \label{sec:crm-deployment}
-Once the final machine learning model has been build and tested, its results must be integrated within the Dynamics 365 instance of \textit{Contoso}. The end goal is to have a prediction for each account regarding the date of the next order. For this, two ways to make account predictions were defined:
+With the final machine learning model build and tested, its results must be integrated within the Dynamics 365 instance of Contoso. The end goal is to have for each account a prediction on the date of the next order. For this, two ways to make account predictions are defined:
 \begin{itemize}
-    \item Run the predictions every first Saturday for every month
+    \item Run the predictions every first Saturday for every month.
     \item Run the predictions for a specific account directly for the CRM interface, at anytime.
 \end{itemize}
 
 Both integration will be supported by \textit{Azure} services.
 
 \subsection{Azure Architecture}
-To deploy the model, four Azure cloud services are used: Functions, Queue Storage, Web App and Application Insights. Azure Functions enable to run code on a serverless architecture and for it to be scaled, the Azure Queue Storage is a service to store large number of messages to be consumed via HTTP call, Azure Web App creates web application with built-in autoscale and Azure Applications Insights is used to analyze performances, errors and logs messages. The connection between those services and Dynamics 365 are sketch in figure \ref{fig:azure-deployment}.
+To deploy the model, four Azure services are used: \textit{Functions}, \textit{Queue Storage}, \textit{Web App} and \textit{Application Insights}. Azure Functions allow to run a piece of code on a serverless architecture and for the code to be scaled on demand. The Azure Queue Storage is a service to store large number of messages, which can latter be consumed via HTTP calls. Azure Web App creates web application with built-in autoscale and Azure Applications Insights are used to analyze performances, errors and logs messages. The connection between those services and Dynamics 365 are sketched in figure \ref{fig:azure-deployment}.
 
 \begin{figure}[!h]
     \centering
@@ -362,36 +362,36 @@ To deploy the model, four Azure cloud services are used: Functions, Queue Storag
     \label{fig:azure-deployment}
 \end{figure}
 
-\noindent The architecture used to integrate machine learning predicitons inside Dynamics 365 contains the further steps:
+The architecture used to integrate machine learning predictions inside Dynamics 365 contains the following steps:
 \vspace*{-\baselineskip}
 \begin{enumerate}[label=\texttt{\arabic*.}]
     \setcounter{enumi}{-1}
     \item The first Saturday of each month, at 03:00, the entire process is triggered.
-    \item A first Azure Function will retrieve all accounts for Dynamics 365, via the Web Api. Only active accounts with at least three orders are retrieved.
-    \item Once all accounts have been retrieved, they are added into a queue stored as an Azure Queue Storage.
-    \item A second Azure Function is trigger each time new items are added into the Azure Queue Storage. This function will retrieve five accounts per run.
-    \item The Azure Function retrieves the predictions for the five accounts with an HTTP request to the Web App.
-    \item The Web App holds the entire logic of the prediction. Build in Python, it makes used of the \textit{Flask} microframework to create HTTP endpoints. When the Web App receives the accounts for the Azure function, it will connect to the CRM and build the data to give to the machine learning model. This model is stored in the Web App and used against the data just created. Predictions are then returned to the Azure Function.
+    \item A first Azure Function retrieves all accounts of interest in Dynamics 365, via the Web API. Only active accounts with at least three orders are retrieved.
+    \item Once all accounts are retrieved, they are added into a queue stored as an Azure Queue Storage.
+    \item A second Azure Function is triggered each time new items are added into the Azure Queue Storage. This function will process five accounts per run.
+    \item The Azure Function retrieves the predictions for the five accounts with an HTTP call to the Web App.
+    \item The Web App holds the entire logic of the prediction. Build in Python, it makes use of the \textit{Flask} microframework to create HTTP endpoints. When the Web App receives the accounts from the Azure function, it will connect to the CRM to build the data for the machine learning. The ML model is stored in the Web App and used against the data just created. Predictions are then returned to the Azure Function.
     \item Once the Azure Function gets the predictions, it updates the CRM.
 \end{enumerate}
 
-One advantages of using this architecture is the connection between the Azure Queue Storage and the second Azure Function. It enables accounts to be consumed at a desired pace, in such a way to not overload the others components (Web App and CRM), to make the predictions before reaching the built-in of timeout Azure Functions and also to have another queue containing failures. In case of an error during the process, accounts for which the predictions weren't computed are added to a queue, in such way that they do not stop the entire process. For each step, Azure Application Insights are used to store logs.
+One advantage of using this architecture is the connection between the Azure Queue Storage and the second Azure Function. It enables accounts to be consumed at a desired pace, in such a way to not overload the others components (Web App and Dynamics 365), to make the predictions before reaching the built-in timeout of Azure Functions and to have another queue containing failures. In case of an error during the process, accounts for which the predictions weren't computed are added to this queue, in such way that they do not stop the entire process. Through all steps, Azure Application Insights are used to store logs.
 
-Experiments with this architecture showed a total running time of approximately 8 hours for more than 100'000 accounts. Compared to others services powered by Azure like the \textit{Azure Machine Learning}' suite, this architecture is significantly less expensive, much more flexible and better suited for this use case.
+Experiments with this architecture showed a total running time of approximately 8 hours for 106'000 accounts. Compared to others services powered by Azure like the \textit{Azure Machine Learning}'s suite, this architecture is significantly less expensive, much more flexible and better suited for this use case.
 
-The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, a JavaScript file stored in a Dynamics 365 Web resource is sending an HTTP request to the Web App, which computes the prediction.
+The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, a JavaScript file stored in a Dynamics 365 \textit{Web resource} is sending an HTTP request to the Web App, which computes and returns the prediction.
 
 \subsection{Integration with Dynamics 365}
-The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \textit{Account} entity page, a section \texttt{ML Predictions} was created with two fields: Next Order Prediction and Last refresh. The first field contains the predicted month of accounts next order and the date of when was the machine learning model run is displayed below. This allow CRM users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information have been added, predictions can be refreshed on-demand, by clicking the blue button \textit{Run predictions}. This button will be grayed out and inactive throughout the entire process (~ 5-10 seconds). No refresh or page reload is necessary, both fields will be updated automatically. If the process ends successfully, the button will turn out green, but if a mistake happened, the button will be red.
+The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \texttt{Account} entity page, a section \texttt{ML Predictions} is created with two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}. The first field contains the predicted month for account's next order. The day the machine learning model is run is displayed below, in the second field. This enables CRM's users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information has been added, predictions can be refreshed on-demand by clicking the blue button \texttt{Run predictions}. This button is grayed out and inactive throughout the entire process (approx. 5-10 seconds). No refresh or page reload is necessary, both fields are automatically updated. If the process ends successfully, the button turns out green, but if a mistake happens, the button is red.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=12cm]{images/dynamics-account.png}
-    \caption[Dynamics 365 \textit{Account} entity page]{Dynamics 365 Account entity page. The part related to the model predictions is in the blue rectangle. It contains two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}, as well as a button \texttt{Run prediction}.}
+    \includegraphics[width=12cm]{images/dynamics-account-ml-screenshot.png}
+    \caption[Dynamics 365 \textit{Account} entity page]{Dynamics 365 Account entity page. The part related to the machine learning prediction is in the blue rectangle. It contains two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}, as well as a button \texttt{Run prediction}.}
     \label{fig:dynamics-account-ml-screenshot}
 \end{figure}
 
-As the prediction is stored as a CRM field, it can be used to create Marketing lists. In Dynamics 365, creating a marketing list is usually the first step in a marketing campaign. For Contoso use case, a marketing list containing all accounts with the field \textit{Next Order Prediction} happening in current or coming month can be created as a first step to contact accounts before they make an order and investigate competitor's offers.
+As the prediction is stored as a CRM field, it can be used to create \textit{Marketing lists}. In Dynamics 365, creating a marketing list is usually the first step in a marketing campaign. For Contoso's use case, a marketing list can contain all accounts with the field \textit{Next Order Prediction} happening in the current or coming month. Then, those accounts can be contacted before they make an order and investigate competitor's offers.
 
 
 % -------------------------------- Section: Further Work
