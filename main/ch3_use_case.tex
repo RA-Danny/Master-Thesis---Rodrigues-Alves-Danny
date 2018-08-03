@@ -103,7 +103,7 @@ Based on this classes assignment, a confusion matrix can be generated. Then, cus
 
 In the formulas above, $t_i\_p_j$ corresponds to the sum of true orders occurring in $m+i$ months and predicted to occur in $m+j$ months, where $m$ is the current month. For example $t_0\_p_0$ corresponds to the sum of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
 
-The metric \textbf{F1-score} will be the benchmark metric to compare models.
+The metric \textbf{F1-score} will be the benchmark metric to compare models. For all metrics, best score is \texttt{1.}0, worst is \texttt{0.0}.
 
 The dataset used in this project is divided into training, testing and validation sets. The training set is composed of orders that took place between 2013 and 2016. It will be used to train all models. Data related to orders that occurred in 2017 form the testing set, use to test each model created. Finally, data associated with orders made from January 2018 to June 2018 are in the validation dataset, only used once to compute the final score in \ref{sec:best-model}.
 
@@ -117,7 +117,7 @@ Data comes from Contoso's CRM, a Dynamics 365 Online instance. By using the \tex
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=15cm]{images/entityDiagram.png}
+    \includegraphics[width=12cm]{images/entityDiagram.png}
     \caption[Entity diagram of the CRM data]{Entity diagram for Contoso CRM data}
     \label{fig:entity-diagram}
 \end{figure}
@@ -218,12 +218,12 @@ It is the first time Contoso is involved in a machine learning project with the 
 
 
 \subsection{Models experiments}
-Python' package \textit{Scikit-learn} was used to build the models of this section. Thanks to Scikit-learn offered ease for testing different models, several families of supervised learning models have been investigated, with results reported on table \ref{tab:scores-simple-models}. Among the models investigated, there are \texttt{Liner models} (linear regression), \texttt{Tree models} (extra tree and decision tree), \texttt{Ensemble models} (random forest, extra trees, gradient boost and bagging regressor) and \texttt{Neighbors models} (KNeighbors regressor).
+Python' package \textit{Scikit-learn} was used to build the models of this section. Scikit-learn enables to test testing different models very easily and several families of supervised learning models have been investigated, with the results reported in table \ref{tab:scores-simple-models}. Among the models investigated, there are \texttt{Liner models} (linear regression), \texttt{Tree models} (extra tree and decision tree), \texttt{Ensemble models} (random forest, extra trees, and bagging regressor) and \texttt{Neighbors models} (kneighbors regressor).
 
-In this initial phase, all models have been trained with scikit-learn's default parameters and a subset of 17 features manually selected\footnote{Those features are marked with an * in annex \ref{annex:features-for-ml}}. For all models created in this project, the same seed value has been used.
+In this initial phase, all models have been trained with scikit-learn's default parameters and a subset of 17 features manually selected\footnote{Those features are marked with an * in annex \ref{annex:features-for-ml}.}. For all models created, the same seed state has been used.
 
 \begin{table}[!htb]
-    \begin{tabular}{l|lll|lll}
+    \begin{tabular}{l|ccc|ccc}
                           & \multicolumn{3}{c|}{Train}                         & \multicolumn{3}{c}{Test}      \\
         \textbf{Model name}        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
         Extra Tree        & 0.996     & 0.999  & 0.998                         & 0.324     & 0.389  & 0.354    \\
@@ -232,25 +232,27 @@ In this initial phase, all models have been trained with scikit-learn's default 
         Random Forest     & 0.696     & 0.998  & 0.820                         & 0.046     & 0.829  & 0.088    \\
         Bagging Regressor & 0.699     & 0.998  & 0.822                         & 0.045     & 0.829  & 0.084    \\
         ExtraTrees        & 0.996     & 0.999  & 0.998                         & 0.044     & 0.829  & 0.083    \\
-        Linear Regression & 0.011     & 0.187  & 0.021                         & 0.028     & 0.305  & 0.051    \\
-        Gradient Boosting & 0.000     & 0.000  & 0.000                         & 0.000     & 0.000  & 0.000    \\
+        Linear Regression & 0.011     & 0.187  & 0.021                         & 0.028     & 0.305  & 0.051    
     \end{tabular}
-    \caption{Prediction scores for first models, ranked by their F1-score on testing set}
+    \caption{Prediction scores for first models, ranked by their F1-score on the testing set}
     \label{tab:scores-simple-models}
 \end{table}
 
 The first observation is that F1-scores aren't high and more than half of the models have a score below 0.10. It's also noticeable that all models are overfitting too much, except for the linear regression. The two tree models are giving the best predictions, with a good trade-off between precision and recall, where the ensemble models are very confident in their predictions (recall score above 80\%), but too cautious and catch less than 5\% of the orders.
 
-The next experiments are related to the set of features used. With the predictions based on \texttt{Extra Tree} models, several features selection techniques have been used: Univariate selection where features are scored with the \textit{f\_regression}, Principal Component Analysis (PCA) and feature importance based on an \textit{ExtraTrees} model. The best F1-score turned out to be obtain with six features selected through the \textit{ExtraTrees} model. With a score of \texttt{0.636}, the model trained with only six features achieves a score almost twice as good as the one obtain previously. It's noticeable that the model gives it's better predictions when using a small number of features, as reported in figure \ref{fig:feature-selection}.
+The next experiments are related to the set of features used. With the predictions made by \texttt{Extra Tree} models, several features selection techniques have been used: Univariate selection where features are scored with the \textit{f\_regression}, Principal Component Analysis (PCA) and feature importance based on an \textit{ExtraTrees} model. The best F1-score turned out to be obtained with six features selected based on the \textit{ExtraTrees} model. With a score of \texttt{0.636}, the model trained with only six features achieves a score almost twice as good as the one obtained previously. It's apparent that this model gives it's better predictions when using a small number of features, as reported in figure \ref{fig:feature-selection}.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=15cm]{images/feature_selection.png}
-    \caption[F1-score based on feature selection]{F1-score obtain on testing set with three different strategies for features selection}
+    \caption[F1-score based on feature selection]{F1-score obtain on the testing set with three different strategies for features selection.}
     \label{fig:feature-selection}
 \end{figure}
 
-After optimizing the set of features, \textit{ExtraTree} regressor's internals parameters can also be optimized. The primary goal is to reduced the overfitting produced by the tree. Two parameters have been fined-tuned: \texttt{max\_depth} and \texttt{min\_samples\_split}. The \texttt{max\_depth} parameter has no value by default, therefore the tree expand itself until all leaves are pure, explaining the overfitting on training data. The \texttt{min\_samples\_split} parameter controls the minimum number of samples required for a node to be split at the depth level below. Most relevant results of this fine-tuning phase are reported in table \ref{tab:tree-fine-tune}.
+
+After optimizing the set of features, \textit{ExtraTree} regressor's internals parameters can also be optimized. The primary goal is to reduce the overfitting produced by the tree. Two parameters have been fine-tuned: \texttt{max\_depth} and \texttt{min\_samples\_split}. The \texttt{max\_depth} parameter has no value by default, therefore the tree expands itself until all leaves are pure. The \texttt{min\_samples\_split} parameter controls the minimum number of samples required for a node to be split. By default, \textit{ExtraTree} will split each node which isn't a leaf and combined with no \texttt{max\_depth}, overfitting on the training data is obvious. 
+
+Most relevant results of this fine-tuning phase are reported in table \ref{tab:tree-fine-tune}.
 
 \begin{table}[!htbp]
     \centering
@@ -273,17 +275,18 @@ After optimizing the set of features, \textit{ExtraTree} regressor's internals p
     10	&  50   &  	0.439  &  0.388 \\
     10	&  70   &  	0.378  &  0.364 
     \end{tabular}
-    \caption{F1 scores for training and testing data. Parameters tested are the \texttt{max\_depth} and \texttt{min\_samples\_split}. Table sorted by decreasing testing score.}
+    \caption{F1-scores on training and testing data. Parameters investigated are the \texttt{max\_depth} and \texttt{min\_samples\_split}. Models trained on a set of six features. Table sorted by decreasing score on the testing set.}
     \label{tab:tree-fine-tune}
 \end{table}
 
-With the best combination of \texttt{max\_depth} and \texttt{min\_samples\_split}, the model reaches a F1-score of 0.715 with the testing data. It's also noticeable that the model is not overfitting anymore, with similar results on the training data.
+With the best combination of \texttt{max\_depth} and \texttt{min\_samples\_split}, the model reaches an F1-score of 0.715 on the testing data. It's also noticeable that the model is not overfitting anymore, with similar results on the training data. Regarding the two parameters investigates, \texttt{min\_samples\_split} has more impact on the predictions that \texttt{max\_depth}. Results show that the tree will not expand itself after 50 depth levels (same scores if the parameter is set to 50 or 80). Overfitting on the training data happens when the tree splits its nodes \textit{too early}, when it is composed of a small number of samples.
 
 
-Alongside with experiment models and new parameters, optimizing the data to train model has been experiment. Until now, data-related optimization have only concern the features set, but there are some others possibilities. By investigating the data, three possible ways to reshape it were found. 
-The first one consist of reducing the data by removing entries related to accounts with less than five entries. Then, for the remaining accounts, take only five random entries. The goal is to reduce the potential influence of accounts ordering very often and also reduce the potential noise in the data bring by accounts with very few entries. A second attempt to reduce the influence of \textit{extreme} accounts is to simply remove all accounts ordering every month or every two months. The third and last experiment to reshape the data is to have the same number of entries per output, in an attempt to standardize the output. All this three attempts to reshape the data never improved the F1-score previously obtained.
+Alongside with experimenting models and new parameters, optimizing the data to train model has been examined. In previous experiments, data-related optimizations have only concern the features set, but there are some others possibilities. By investigating the data, three possible ways to reshape it were found. 
+The first one consist of reducing the data by removing accounts with less than five entries. Then, for the remaining accounts, take only five random entries. The goal is to reduce the potential influence of accounts ordering very often and also reduce the potential noise in the data bring by accounts with very few entries, for example an account with four orders spread across five months. A second attempt to reduce the influence of \textit{extreme} accounts is to simply remove all accounts ordering every month or every two months. The third and last experiment to reshape the data is to have the same number of entries per output. All these three attempts to reshape the data never improved the F1-score previously obtained.
 
-To summarize this section about experimenting several models available with \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor which after a fine-tuning phase outputs predictions with a \textbf{F1-score of 0.715}.
+To summarize this section about experimenting with several models available in \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor trained on a small set of features. After a fine-tuning phase, it achieves a F1-score of 0.715 on the testing dataset.
+
 
 \subsection{Neural Networks}
 The \textit{ExtraTree} model has a big flaw: it's only using six features and none about weather or product's price. When trying to add those kind of features, the model wasn't as efficient as before. Therefore, a new type of machine learning model has been investigated: Neural Networks. Build with the Keras framework, six different architectures of Neural Networks have been experimented, all based on fully-connected layers. Similar to what has been done with previous models, several set of manually selected features have been used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and scoring \texttt{0.811} with the test data. All results and details of models tested are reported in annex \ref{annex:nn-experiments}.
