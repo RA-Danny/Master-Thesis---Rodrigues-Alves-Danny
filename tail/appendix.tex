@@ -2,11 +2,27 @@
 
 % ------------------------------------------ CRM Data Facts
 \chapter{Appendix: CRM data facts}
-\begin{figure}[h]
+
+\vspace*{-1cm}
+
+\section{Orders per account}
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=15cm]{images/number_of_orders_per_account.png}
+    \includegraphics[width=9.5cm]{images/number_of_orders_per_account.png}
     \caption{Number of orders per accounts}
     \label{fig-annex:orders_per_accounts}
+\end{figure}
+
+% ------- Customer Journey
+\section{Customer Journey}
+
+Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account reservoir. Monthly temperatures degrees and prices are also plotted.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=14.5cm]{images/customer-journey.png}
+    \caption{Example of a customer journey plot}
+    \label{fig-annex:customer-journey}
 \end{figure}
 
 
@@ -14,6 +30,7 @@
 \chapter{Features for machine learning}
 \label{annex:features-for-ml}
 
+{\footnotesize
     \begin{tabularx}{1\textwidth}{>{\bfseries}lL} 
         \\\toprule\endfirsthead
         \endhead
@@ -33,11 +50,13 @@
         11.  &   \textbf{sprache\_0..3}            \tab   ONE-HOT     \tab   Language of account \\
         12.  &   \textbf{tank\_lagergut\_0..9}      \tab   ONE-HOT     \tab   Tank characteristic \\
         13.  &   \textbf{tank\_volumn}             \tab   FLOAT       \tab   Volumn capacity of customer tank \\
+        
     \end{tabularx}
-    
+
     %\pagebreak
     
     \begin{tabularx}{1\textwidth}{>{\bfseries}lL} 
+        \small
         \\\toprule\endfirsthead
         \endhead
         \\ \multicolumn{2}{r}{\itshape continues on next page..}\\\midrule\endfoot
@@ -68,6 +87,7 @@
     %\pagebreak
 
     \begin{tabularx}{1\textwidth}{>{\bfseries}lL} 
+        \small
         \\\toprule\endfirsthead
         \endhead
         \\ \multicolumn{2}{r}{\itshape continues on next page..}\\\midrule\endfoot
@@ -100,30 +120,14 @@
 25.  &    \textbf{price\_prev\_diff\_w\_01\_p}*                               \tab   FLOAT   \tab   Difference in percentage between current price and mean price of one week ago \\
 26.  &    \textbf{price\_prev\_diff\_w\_12\_p}*                               \tab   FLOAT   \tab   Difference in percentage between mean price of 1 week ago and mean price of 2 weeks ago \\
 27.  &    \textbf{price\_prev\_diff\_w\_23\_p}                               \tab   FLOAT   \tab   Difference in percentage between mean price of 2 week ago and mean price of 3 weeks ago \\
-28.  &    \textbf{product\_0..6}                                             \tab   ONE-HOT \tab   Produckts ordered \\
+28.  &    \textbf{product\_0..6}                                             \tab   ONE-HOT \tab   Products ordered \\
 29.  &    \textbf{weather\_days\_below\_0}*                                   \tab   INTEGER \tab   Number of days below 0 °C between last order and last last order \\
 30.  &    \textbf{weather\_days\_below\_5}*                                   \tab   INTEGER \tab   Number of days below 5 °C between last order and last last order \\
 31.  &    \textbf{weather\_days\_below\_10}                                  \tab   INTEGER \tab   Number of days below 10 °C between last order and last last order \\
     \end{tabularx}
     
     
-    
-    
-    
-% ------- Customer Journey
-\chapter{Customer Journey}
-
-Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account reservoir. Monthly temperatures degrees and prices are also plotted.
-
-\vspace*{1cm}
-
-\begin{figure}[h]
-    \centering
-    \hspace*{-2cm}
-    \includegraphics[width=20cm]{images/customer-journey.png}
-    \caption{Example of a customer journey plot}
-    \label{fig-annex:customer-journey}
-\end{figure}
+}
 
 
 
@@ -139,14 +143,16 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
     \label{fig-annex:nn-sketch}
 \end{figure}
 
-\textbf{Models used:}\\
+\noindent\textbf{Models used:}\\
 \texttt{Model 1}: One hidden layer composed of 90 neurons. \\
 \texttt{Model 2}: One hidden layer composed of 200 neurons. \\
 \texttt{Model 3}: Two hidden layers composed of 90 and 30 neurons respectively. \\
 \texttt{Model 4}: Three hidden layers composed of 90, 60 and 30 neurons respectively. \\
 \texttt{Model 5}: Three hidden layers composed of 200, 90 and 30 neurons respectively. \\
 
-\textbf{Set of features used:}\\
+\pagebreak
+
+\noindent\textbf{Set of features used:}\\
 \texttt{Features 1}: Set of features composed of the entire XXX features created. \\
 \texttt{Features 2}: Set of 41 features related to account, previous order and current month with price and weather data. \\
 \texttt{Features 3}: Set of 10 features related to account, previous order and current month but without price and weather information. Based on results from Sklearn models.\\
@@ -154,54 +160,60 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
 \texttt{Features 5}: Set of 16 features similar to set 4 but with price data. \\
 \texttt{Features 6}: Set of 19 features similar to set 4 but with weather data. \\
 
-\textbf{Results:}
-\begin{table}[!h]
+
+\noindent\textbf{Comments on table \ref{tab-annex:nn-experiments}}\\
+\indent Models 6 and 5 are the two models with the better predictions. Those models are the most complete ones, with three hidden layers and it appears that the more neurons per hidden layer the best. In terms of running time, model 6 takes 2.5 more time to train per epoch.
+
+After the model's architecture, the set of features is the most important parameter. Features set 3 and 4 are the one performing the best with models 5 and 6. Those sets are based on the best feature for the \textit{ExtraTree} model and for model 5 and 6, when weather and price related features are considered, the model performs slightly best. Based on the results obtain with feature set 5 and 6, it seems that weather-related features are more usefull to the predictions than price-related ones.
+
+
+\noindent\textbf{Results:}
+\begin{table}[htbp]
     \centering
+    \small
     \begin{tabular}{c|c|c|c|c|c}
         \textbf{Model} & \textbf{Features} & \textbf{Best epoch} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
-        Model 5     &   	Features 5      &   	6       &   	0.8029  &   	0.8029  &   	0.8029  \\
-        Model 4     &   	Features 4      &   	8       &   	0.8028  &   	0.8028  &   	0.8028  \\
-        Model 5     &   	Features 4      &   	7       &   	0.8027  &   	0.8027  &   	0.8027  \\
-        Model 4     &   	Features 5      &   	6       &   	0.7988  &   	0.7988  &   	0.7988  \\
-        Model 5     &   	Features 7      &   	9       &   	0.7984  &   	0.7984  &   	0.7984  \\
-        Model 5     &   	Features 6      &   	7       &   	0.7966  &   	0.7966  &   	0.7966  \\
-        Model 4     &   	Features 7      &   	8       &   	0.7946  &   	0.7946  &   	0.7946  \\
-        Model 4     &   	Features 6      &   	7       &   	0.7914  &   	0.7914  &   	0.7914  \\
-        Model 2     &   	Features 4      &   	9       &   	0.7810  &   	0.7810  &   	0.7810  \\
-        Model 2     &   	Features 7      &   	4       &   	0.7805  &   	0.7805  &   	0.7805  \\
-        Model 3     &   	Features 5      &   	6       &   	0.7776  &   	0.7776  &   	0.7776  \\
-        Model 1     &   	Features 4      &   	6       &   	0.7759  &   	0.7759  &   	0.7759  \\
-        Model 3     &   	Features 4      &   	7       &   	0.7752  &   	0.7752  &   	0.7752  \\
-        Model 1     &   	Features 7      &   	7       &   	0.7749  &   	0.7749  &   	0.7749  \\
-        Model 2     &   	Features 5      &   	8       &   	0.7741  &   	0.7741  &   	0.7741  \\
-        Model 1     &   	Features 5      &   	9       &   	0.7718  &   	0.7718  &   	0.7718  \\
-        Model 3     &   	Features 7      &   	8       &   	0.7704  &   	0.7704  &   	0.7704  \\
-        Model 5     &   	Features 1      &   	0       &   	0.7669  &   	0.7669  &   	0.7669  \\
-        Model 2     &   	Features 6      &   	8       &   	0.7650  &   	0.7650  &   	0.7650  \\
-        Model 3     &   	Features 6      &   	4       &   	0.7632  &   	0.7632  &   	0.7632  \\
-        Model 1     &   	Features 6      &   	6       &   	0.7611  &   	0.7611  &   	0.7611  \\
-        Model 5     &   	Features 2      &   	0       &   	0.7513  &   	0.7513  &   	0.7513  \\
-        Model 4     &   	Features 2      &   	9       &   	0.7425  &   	0.7425  &   	0.7425  \\
-        Model 4     &   	Features 1      &   	0       &   	0.7360  &   	0.7360  &   	0.7360  \\
-        Model 2     &   	Features 2      &   	4       &   	0.7218  &   	0.7218  &   	0.7218  \\
-        Model 1     &   	Features 2      &   	8       &   	0.7190  &   	0.7190  &   	0.7190  \\
-        Model 1     &   	Features 1      &   	1       &   	0.7168  &   	0.7168  &   	0.7168  \\
-        Model 3     &   	Features 2      &   	3       &   	0.7142  &   	0.7142  &   	0.7142  \\
-        Model 2     &   	Features 1      &   	0       &   	0.7124  &   	0.7124  &   	0.7124  \\
-        Model 3     &   	Features 1      &   	0       &   	0.6822  &   	0.6822  &   	0.6822  \\
-        Model 5     &   	Features 3      &   	5       &   	0.5581  &   	0.5581  &   	0.5581  \\
-        Model 3     &   	Features 3      &   	1       &   	0.5222  &   	0.5222  &   	0.5222  \\
-        Model 2     &   	Features 3      &   	2       &   	0.5159  &   	0.5159  &   	0.5159  \\
-        Model 4     &   	Features 3      &   	5       &   	0.5143  &   	0.5143  &   	0.5143  \\
-        Model 1     &   	Features 3      &   	3       &   	0.5007  &   	0.5007  &   	0.5007  \\
+        Model 6  &	Set 4      &	6	    &	0.791455    &	0.851300    &	0.820287    \\
+        Model 6  &	Set 3      &	6	    &	0.815533    &	0.811962    &	0.813744    \\
+        Model 6  &	Set 5      &	6	    &	0.781810    &	0.834485    &	0.807289    \\
+        Model 5  &	Set 4      &	8	    &	0.806852    &	0.807025    &	0.806938    \\
+        Model 5  &	Set 3      &	6	    &	0.795013    &	0.813357    &	0.804080    \\
+        Model 6  &	Set 6      &	8	    &	0.826810    &	0.781778    &	0.803663    \\
+        Model 4  &	Set 4      &	7	    &	0.803548    &	0.798725    &	0.801129    \\
+        Model 4  &	Set 3      &	5	    &	0.802330    &	0.797961    &	0.800140    \\
+        Model 4  &	Set 6      &	9	    &	0.807627    &	0.784523    &	0.795907    \\
+        Model 5  &	Set 5      &	7	    &	0.803828    &	0.785380    &	0.794497    \\
+        Model 5  &	Set 6      &	7	    &	0.821526    &	0.766461    &	0.793039    \\
+        Model 4  &	Set 5      &	7	    &	0.783308    &	0.789053    &	0.786170    \\
+        Model 5  &	Set 1      &	0	    &	0.814102    &	0.756303    &	0.784139    \\
+        Model 6  &	Set 1      &	2	    &	0.791348    &	0.767504    &	0.779244    \\
+        Model 2  &	Set 6      &	8	    &	0.781636    &	0.776302    &	0.778960    \\
+        Model 2  &	Set 3      &	7	    &	0.771885    &	0.785075    &	0.778424    \\
+        Model 1  &	Set 6      &	5	    &	0.779884    &	0.775070    &	0.777469    \\
+        Model 3  &	Set 6      &	9	    &	0.772540    &	0.781452    &	0.776971    \\
+        Model 2  &	Set 4      &	9	    &	0.756046    &	0.792444    &	0.773818    \\
+        Model 3  &	Set 3      &	1	    &	0.778827    &	0.768450    &	0.773604    \\
+        Model 3  &	Set 4      &	7	    &	0.767350    &	0.779901    &	0.773574    \\
+        Model 2  &	Set 5      &	6	    &	0.772420    &	0.767589    &	0.769997    \\
+        Model 1  &	Set 3      &	5	    &	0.763698    &	0.776149    &	0.769873    \\
+        Model 1  &	Set 4      &	7	    &	0.748555    &	0.788513    &	0.768015    \\
+        Model 4  &	Set 1      &	1	    &	0.772353    &	0.758589    &	0.765409    \\
+        Model 3  &	Set 5      &	8	    &	0.739245    &	0.783388    &	0.760676    \\
+        Model 1  &	Set 5      &	7	    &	0.761544    &	0.757843    &	0.759689    \\
+        Model 4  &	Set 2      &	2	    &	0.689403    &	0.799537    &	0.740397    \\
+        Model 6  &	Set 2      &	1	    &	0.660790    &	0.833442    &	0.737141    \\
+        Model 5  &	Set 2      &	0	    &	0.666796    &	0.804559    &	0.729228    \\
+        Model 3  &	Set 2      &	0	    &	0.678260    &	0.774853    &	0.723346    \\
+        Model 3  &	Set 1      &	0	    &	0.733279    &	0.708292    &	0.720569    \\
+        Model 1  &	Set 2      &	1	    &	0.669846    &	0.774422    &	0.718348    \\
+        Model 2  &	Set 2      &	0	    &	0.656161    &	0.758358    &	0.703568    \\
+        Model 2  &	Set 1      &	0	    &	0.717307    &	0.607880    &	0.658075    \\
+        Model 1  &	Set 1      &	1	    &	0.672856    &	0.637357    &	0.654625    \\
     \end{tabular}
     \caption{Results for the model's architecture and features experiments. Scores retrieved with the testing dataset. Table sorted by decreasing Testing F1-score.}
     \label{tab-annex:nn-experiments}
 \end{table}
 
-
-\textbf{Comments:}\\
-Bla bla bla
 
 
 
@@ -213,69 +225,82 @@ The fine-tuning phase is decomposed into four parts, each part related to a para
 
 Note that on the results below, the F1-score is decreasing some times, even by keeping the best configuration. This is a well known issue when using Keras model: there is still some part of randomness that cannot be fixed, even with seed! REF REF REF
 
+
 \begin{enumerate}
-    \item Activation function
-        \begin{table}[!h]
+
+    \item \textbf{Batch size} \\
+        \vspace{-1cm}
+        \begin{table}[htbp]
             \centering
-            \begin{tabular}{c|c|c|c|c|c}
-            \textbf{Activation function} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
-            Linear      &   	0.8029  &   	0.8029  &   	0.8029  \\
-            tanh        &   	0.8028  &   	0.8028  &   	0.8028  \\
-            softmax     &   	0.8027  &   	0.8027  &   	0.8027  \\
-            elu         &   	0.8029  &   	0.8029  &   	0.8029  \\
-            softmax     &   	0.8028  &   	0.8028  &   	0.8028  \\
-            relu        &   	0.8027  &   	0.8027  &   	0.8027  \\
-            selu        &    	0.8029  &   	0.8029  &   	0.8029  \\
-            softplus    &   	0.8028  &   	0.8028  &   	0.8028  \\
-            softsign    &   	0.8027  &   	0.8027  &   	0.8027  \\
-            sigmoid     &   	0.8029  &   	0.8029  &   	0.8029  \\
-            hard sigmoid        &   	0.8028  &   	0.8028  &   	0.8028  \\
+            \begin{tabular}{c|c|c|c}
+            \textbf{Batch size} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+                70      &	0.7952    &	0.8498    &	0.8216 \\
+                150     &	0.7929    &	0.8467    &	0.8189 \\
+                200     &	0.8077    &	0.8294    &	0.8184 \\
+                100     &	0.8067    &	0.8268    &	0.8166 \\
+                50      &	0.7938    &	0.8342    &	0.8135 \\
+                10      &	0.8081    &	0.8191    &	0.8135 \\
+                30      &	0.8014    &	0.8099    &	0.8057 \\
             \end{tabular}
-            \caption{Results the fine-tuning of the activation function. Scores retrieved with the testing dataset.}
+        \end{table}        
+    
+
+
+    \item \textbf{Activation function}\\
+        \vspace{-0.6cm}
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{l|c|c|c}
+            \textbf{Activation} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+            elu         &	0.8140    &	0.8394    &	0.8265 \\
+            selu        &	0.8076    &	0.8428    &	0.8248 \\
+            softsign    &	0.8184    &	0.8138    &	0.8161 \\
+            relu        &	0.8066    &	0.8103    &	0.8085 \\
+            softplus    &	0.8239    &	0.7928    &	0.8081 \\
+            tanh        &	0.8029    &	0.8056    &	0.8043 \\
+            sigmoid     &	0.7888    &	0.8143    &	0.8013 \\
+            softmax     &	0.8009    &	0.7635    &	0.7818 \\
+            linear      &	0.5645    &	0.5851    &	0.7746 \\
+            \end{tabular}
         \end{table}
     
-    \item Loss function
-        \begin{table}[!h]
+    \item \textbf{Loss function}\\
+        \vspace{-0.5cm}
+        \begin{table}[htbp]
             \centering
-            \begin{tabular}{c|c|c|c|c|c}
+            \begin{tabular}{l|c|c|c}
                 \textbf{Loss function} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
-                mean absolute error      &   	0.8029  &   	0.8029  &   	0.8029  \\
-                mean squarred error        &   	0.8028  &   	0.8028  &   	0.8028  \\
-                mape     &   	0.8027  &   	0.8027  &   	0.8027  \\
-                msle         &   	0.8029  &   	0.8029  &   	0.8029  \\
-                kid     &   	0.8028  &   	0.8028  &   	0.8028  \\
-                cosine        &   	0.8027  &   	0.8027  &   	0.8027  \\
-                categorical hinge        &    	0.8029  &   	0.8029  &   	0.8029  \\
-                logcosh    &   	0.8028  &   	0.8028  &   	0.8028  \\
+                    logcosh &	0.7951    &	0.8661    &	0.8291 \\
+                    msle    &	0.8044    &	0.8453    &	0.8243 \\
+                    mae     &	0.8241    &	0.8239    &	0.8240 \\
+                    mse     &	0.7442    &	0.8832    &	0.8078 \\
             \end{tabular}
-            \caption{Results the fine-tuning of the loss function. Scores retrieved with the testing dataset.}
         \end{table}
         
         
-    \item Optimizer
-        \begin{table}[h]
+    \item \textbf{Optimizer}\\
+        \vspace{-0.5cm}
+        \begin{table}[htbp]
             \centering
-            \begin{tabular}{c|c|c|c|c|c}
+            \begin{tabular}{l|c|c|c}
                 \textbf{Optimizer} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
-                adam      &   	0.8029  &   	0.8029  &   	0.8029  \\
-                sgd        &   	0.8028  &   	0.8028  &   	0.8028  \\
-                rmsprop     &   	0.8027  &   	0.8027  &   	0.8027  \\
-                adagrad         &   	0.8029  &   	0.8029  &   	0.8029  \\
-                adamax     &   	0.8028  &   	0.8028  &   	0.8028  \\
+                    adamax  &	0.8002    &	0.8319    &	0.8156 \\
+                    adam    &	0.8266    &	0.8006    &	0.8133 \\
+                    sgd     &	0.7959    &	0.8097    &	0.8028 \\
+                    adagrad &	0.7744    &	0.8284    &	0.8005 \\
             \end{tabular}
-            \caption{Results the fine-tuning of the optimizer choice. Scores retrieved with the testing dataset.}
         \end{table}
 
 
-    \item Bias usage
-        \begin{table}[h]
+    \item \textbf{Bias usage}\\
+        \vspace{-0.5cm}
+        \begin{table}[htbp]
             \centering
-            \begin{tabular}{c|c|c|c|c|c}
+            \begin{tabular}{l|c|c|c}
                 \textbf{Bias} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
-                True      &   	0.8029  &   	0.8029  &   	0.8029  \\
-                False        &   	0.8028  &   	0.8028  &   	0.8028  \\
+                True    &	0.8044    &	0.8427    &	0.8231 \\
+                False   &	0.8118    &	0.8210    &	0.8164 \\
             \end{tabular}
-            \caption{Results the fine-tuning for the bias usage. Scores retrieved with the testing dataset.}
         \end{table}
         
         
@@ -285,3 +310,65 @@ Note that on the results below, the F1-score is decreasing some times, even by k
 % --------------- LSTM results
 \chapter{LSTM experiments}
 \label{annex:lstm-experiments}
+
+
+\textbf{Sketch of a neural network with an LSTM layer:}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{images/nn-sketch-lstm.png}
+    \caption[Sketch of a Neural Network with LSTM layer]{Sketch of a the Neural Network architecture composed of an LSTM layer and one fully-connected layer afterwards.}
+    \label{fig-annex:nn-sketch-lstm}
+\end{figure}
+
+\noindent\textbf{Models used}\\
+\texttt{Model 1}: LSTM layer with an output of size 90 without  fully connected layers. \\
+\texttt{Model 2}: LSTM layer with an output of size 200 without fully connected layers. \\
+\texttt{Model 3}: LSTM layer with an output of size 90 followed by a fully connected layer with 60 neurons. \\
+\texttt{Model 4}: LSTM layer with an output of size 90 followed by three fully connected layers with 200, 100 and 50 neurons \\
+\texttt{Model 5}: Two stack LSTM layers with size of 100 and 50 without fully connected layers. \\
+
+
+\textbf{Results:}
+\begin{table}[htbp]
+    \centering
+    \small
+    \begin{tabular}{c|c|c|c|c|c}
+        \textbf{Model} & \textbf{Features} & \textbf{Best epoch} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
+        Model 4    &	Set 6	    &   4      &      0.853547     &	0.756196    &	0.801928  \\
+        Model 4    &	Set 5	    &   3      &      0.851867     &	0.757161    &	0.801727  \\
+        Model 4    &	Set 3	    &   8      &      0.831043     &	0.770204    &	0.799468  \\
+        Model 4    &	Set 2	    &   9      &      0.858899     &	0.746690    &	0.798874  \\
+        Model 4    &	Set 4	    &   9      &      0.860676     &	0.745085    &	0.798720  \\
+        Model 5    &	Set 6	    &   5      &      0.839094     &	0.743312    &	0.788304  \\
+        Model 4    &	Set 1	    &   9      &      0.812634     &	0.765249    &	0.788230  \\
+        Model 3    &	Set 2	    &   5      &      0.852265     &	0.732955    &	0.788120  \\
+        Model 5    &	Set 3	    &   8      &      0.836295     &	0.739536    &	0.784945  \\
+        Model 5    &	Set 2	    &   8      &      0.834816     &	0.735545    &	0.782043  \\
+        Model 3    &	Set 6	    &   5      &      0.818325     &	0.746955    &	0.781013  \\
+        Model 2    &	Set 4	    &   8      &      0.820919     &	0.744311    &	0.780740  \\
+        Model 2    &	Set 3	    &   8      &      0.792452     &	0.766322    &	0.779168  \\
+        Model 2    &	Set 2	    &   6      &      0.755777     &	0.801203    &	0.777827  \\
+        Model 3    &	Set 5	    &   9      &      0.845743     &	0.719995    &	0.777819  \\
+        Model 1    &	Set 6	    &   9      &      0.796770     &	0.758796    &	0.777320  \\
+        Model 3    &	Set 3	    &   6      &      0.825161     &	0.733698    &	0.776746  \\
+        Model 5    &	Set 5	    &   7      &      0.836228     &	0.724553    &	0.776395  \\
+        Model 2    &	Set 6	    &   9      &      0.818859     &	0.736902    &	0.775722  \\
+        Model 1    &	Set 2	    &   7      &      0.786494     &	0.764248    &	0.775211  \\
+        Model 5    &	Set 1	    &   8      &      0.803029     &	0.748767    &	0.774949  \\
+        Model 5    &	Set 4	    &   4      &      0.843988     &	0.715625    &	0.774524  \\
+        Model 3    &	Set 4	    &   3      &      0.830222     &	0.721050    &	0.771795  \\
+        Model 2    &	Set 1	    &   5      &      0.786466     &	0.749751    &	0.767670  \\
+        Model 1    &	Set 5	    &   8      &      0.821374     &	0.719641    &	0.767149  \\
+        Model 2    &	Set 5	    &   8      &      0.793832     &	0.741482    &	0.766765  \\
+        Model 3    &	Set 1	    &   7      &      0.817767     &	0.721585    &	0.766671  \\
+        Model 1    &	Set 4	    &   6      &      0.806085     &	0.726495    &	0.764223  \\
+        Model 1    &	Set 3	    &   7      &      0.795377     &	0.734691    &	0.763830  \\
+        Model 1    &	Set 1	    &   9      &      0.767634     &	0.742091    &	0.754646  \\
+    \end{tabular}
+    \caption[LSTM models results]{Results obtain by LSTM-base neural networks. Scores obtains with the testing dataset. Ranked by decreasing F1-score.}
+    \label{tab-annex:nn-experiments-lstm}
+\end{table}
+
+
+\noindent\textbf{Comments:}\\
+It's clear that Model 4 performs the best. This is the most complete model, with three fully connected hidden layers following the LSTM one. Compared to previous neural network models without an LSTM, the \texttt{Precision} metric achieves a better score. When looking at the detailed score, LSTM models perform much better with the $t_0\_p_0$ metric: it indicates that the predictions are "precise" and would perform the best if the model's one-month tolerance is dropped.

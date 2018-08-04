@@ -180,7 +180,7 @@ As defined above, the model is planned to be used on a monthly basis and its out
 
 Figure \ref{fig:data-build-example} contains an example of the data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the data relates to May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and March 2014, date of account's second order. The same principle is applied to all months, until March 2016, date of the last order made by this account.
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \hspace{-1cm}
     \includegraphics[width=17cm]{images/data-build-ml-example.png}
     \caption[Process to build data for machine learning]{Sketch of the process to build data for the machine learning models. Yellow circles model account's orders through time. The entry 1. corresponds to the month April 2013, the entry 17. to September 2014 and the entry 34. to February 2016.}
@@ -222,7 +222,7 @@ Python' package \textit{Scikit-learn} was used to build the models of this secti
 
 In this initial phase, all models have been trained with scikit-learn's default parameters and a subset of 17 features manually selected\footnote{Those features are marked with an * in annex \ref{annex:features-for-ml}.}. For all models created, the same seed state has been used.
 
-\begin{table}[!htb]
+\begin{table}[htb]
     \begin{tabular}{l|ccc|ccc}
                           & \multicolumn{3}{c|}{Train}                         & \multicolumn{3}{c}{Test}      \\
         \textbf{Model name}        & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\ \hline
@@ -242,7 +242,7 @@ The first observation is that F1-scores aren't high and more than half of the mo
 
 The next experiments are related to the set of features used. With the predictions made by \texttt{Extra Tree} models, several features selection techniques have been used: Univariate selection where features are scored with the \textit{f\_regression}, Principal Component Analysis (PCA) and feature importance based on an \textit{ExtraTrees} model. The best F1-score turned out to be obtained with six features selected based on the \textit{ExtraTrees} model. With a score of \texttt{0.636}, the model trained with only six features achieves a score almost twice as good as the one obtained previously. It's apparent that this model gives it's better predictions when using a small number of features, as reported in figure \ref{fig:feature-selection}.
 
-\begin{figure}[!htbp]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=15cm]{images/feature_selection.png}
     \caption[F1-score based on feature selection]{F1-score obtain on the testing set with three different strategies for features selection.}
@@ -254,7 +254,7 @@ After optimizing the set of features, \textit{ExtraTree} regressor's internals p
 
 Most relevant results of this fine-tuning phase are reported in table \ref{tab:tree-fine-tune}.
 
-\begin{table}[!htbp]
+\begin{table}[htbp]
     \centering
     \begin{tabular}{c|c|c|c}
     \textbf{Max depth} & \textbf{Min samples split} & \textbf{Training F1-score} & \textbf{Testing F1-score} \\ \hline
@@ -285,15 +285,15 @@ With the best combination of \texttt{max\_depth} and \texttt{min\_samples\_split
 Alongside with experimenting models and new parameters, optimizing the data to train model has been examined. In previous experiments, data-related optimizations have only concern the features set, but there are some others possibilities. By investigating the data, three possible ways to reshape it were found. 
 The first one consist of reducing the data by removing accounts with less than five entries. Then, for the remaining accounts, take only five random entries. The goal is to reduce the potential influence of accounts ordering very often and also reduce the potential noise in the data bring by accounts with very few entries, for example an account with four orders spread across five months. A second attempt to reduce the influence of \textit{extreme} accounts is to simply remove all accounts ordering every month or every two months. The third and last experiment to reshape the data is to have the same number of entries per output. All these three attempts to reshape the data never improved the F1-score previously obtained.
 
-To summarize this section about experimenting with several models available in \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor trained on a small set of features. After a fine-tuning phase, it achieves a F1-score of 0.715 on the testing dataset.
+To summarize this section about experimenting with several models available in \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor trained on a small set of features. After a fine-tuning phase, it achieves a F1-score of 0.715 on the testing dataset, a precision score of 0.813 and a recall score of 0.638.
 
 
 \subsection{Neural Networks}
-The \textit{ExtraTree} model has a big flaw: it's only using six features and none about weather or product's price. When trying to add those kind of features, the model wasn't as efficient as before. Therefore, a new type of machine learning model has been investigated: Neural Networks. Build with the Keras framework, six different architectures of Neural Networks have been experimented, all based on fully-connected layers. Similar to what has been done with previous models, several set of manually selected features have been used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and scoring \texttt{0.811} with the test data. All results and details of models tested are reported in annex \ref{annex:nn-experiments}.
+The \textit{ExtraTree} model has a big flaw: it's only using six features and none about the weather nor product's price. When adding that kind of features, the model isn't as good as before. Therefore, a new type of machine learning model is investigated: Neural Networks. Build with the \textit{Keras} framework, six different architectures of Neural Networks are experimented, all based on fully-connected layers. Similar to what has been done with previous models, several sets of manually selected features are used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and reaching an F1-score of \texttt{0.820} on the test data. Details results, and analysis of all tested models are reported in annex \ref{annex:nn-experiments}.
 
-Once that the model architecture has been chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the baseline model of previous phase (table XXX-annex), first optimize the training batch size, then the activation function of hidden layers, model's compiler loss function and finally the model compiler (results reported in annex \ref{annex:nn-fine-tuning}). Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
+Once the model's architecture is chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the best model in \ref{annex:nn-experiments}, optimize the training batch size, then the activation function of hidden layers, the model's compiler loss function and finally the model's optimizer function (results reported in annex \ref{annex:nn-fine-tuning}). Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
 
-\begin{table}[]
+\begin{table}[b]
     \centering
     \begin{tabular}{l|l|l}
         \textbf{Model part}           & \textbf{Parameter}                 & \textbf{Value}         \\ \hline
@@ -311,37 +311,37 @@ Once that the model architecture has been chosen, internal parameters of the mod
 
 
 \subsection{LSTM}
-A flaw present in previous models is that they are not account specific. Of course there are some account-specific features, but those are not enough to catch some use case. Let's assume that an account has a specific ordering strategy: make a big order in June, then make a new but smaller order in September and repeating the same ordering strategy each 15 months. For such account, the previous model will most probably not be able to catch its behavior with the features used. That's the main motivation for using Long Short-Term Memory (LSTM) networks in this project. Being part of the Recurrent Neural Networks (RNN) family, LSTMs have the ability to recognize patterns in sequences of data. This is a different problem compared to other types of supervised learning as sequences impose an order on observations.
+A flaw present in previous models, neural networks included, is that the models are not account-specific. Of course, there are some account-specific features, but those are not enough to catch some use cases. Let's assume that an account has a specific ordering strategy: make a big order in June, then make a smaller order as soon as prices are going down, for example in September, and repeat the same ordering strategy every 15 months. For such account, the previous model will most probably not be able to catch its behavior with the features used. That's the main motivation for considering Long Short-Term Memory (LSTM) networks for this task. Being part of the Recurrent Neural Networks (RNN) family, LSTMs have the ability to recognize patterns in sequences of data. This is a different problem compared to other types of supervised learning since sequences impose an order on observations.
 
-To be able to use LSTMs, the data need to be reshaped. Previous models were expecting two-dimension input, but LSTMs required data to be in three-dimensions form: \texttt{[batch size, time steps, hidden size]}. To reshape the data, all entries related to the same account have been sorted by month and year (as detailed in section \ref{sec:data-shape-for-ml}, all entries are \textit{linked} to a given month). Among all these entries, one has been taken randomly and will be consider as the last \textit{step} of the LSTM data, while all entries occurring before will be considered as previous steps. Figure \ref{fig:lst-data-build} sketch this process. In order to have a dataset that a computer can still handle, the LSTM data is composed of a maximum of five entries per account and each entries has a maximum of 15 steps (15 monthly data).
+To be able to use LSTMs, the data need to be reshaped. Previous models were expecting a two-dimension input, but LSTMs requires data to be in a three-dimensions form: \texttt{[batch size, time steps, features size]}. To reshape the data, all entries related to the same account are sorted by month and year. Among all these entries, one is taken randomly and is considered as the last \textit{step} of the LSTM data, while all entries occurring before are considered as previous steps. Figure \ref{fig:lst-data-build} outlines this process. In order to have a dataset that a computer can handle, the LSTM data is composed of a maximum of three entries per account and each entry has a maximum of 15 steps (15 monthly data).
 
-\begin{figure}[!htbp]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=10cm]{images/lstm-data-build.png}
     \caption[LSTM data build]{Example of reshaping the data for LSTM models. From the initial data, the fourth entry has been selected randomly and is placed as the last step of the data.}
     \label{fig:lst-data-build}
 \end{figure}
 
-Similar to the experiments with previous neural networks, several model architectures have been used to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM one. With the first experiments, results were similar to the one obtained with only fully-connected layers but on the batch size fine-tuning phase, results didn't improve the testing F1-score. Results are available in annex \ref{annex:lstm-experiments}.
+Similar to the experiments with previous neural networks, several model architectures have been investigated to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM part. With the first experiments, results were similar to the one obtained with only fully-connected layers but on the batch size fine-tuning phase, results didn't improve the testing F1-score. Results are available in annex \ref{annex:lstm-experiments}.
 
 
 
 \subsection{Best model evaluation}
 \label{sec:best-model}
 
-The best model is a Neural Network composed of three fully connected hidden layers with 200, 90 and 30 neurons. Trained with the parameters reported in table \ref{tab:nn-final-parameters}, it achieves the following scores:
+The best model is a Neural Network composed of five fully connected hidden layers with 200, 150, 90, 60 and 30 neurons. Trained with the parameters reported in table \ref{tab:nn-final-parameters}, it achieves the following scores:
 
-\noindent\hspace*{0.8cm}  1. \texttt{Training data}:   F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX \\
-\hspace*{0.8cm}           2. \texttt{Testing data}:    F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX \\
-\hspace*{0.8cm}           3. \texttt{Validation data}: F1-score of \textbf{0.XXX}, precision of 0.XXX and recall of 0.XXXX
+\noindent\hspace*{0.8cm}  1. \texttt{Training data}:   F1-score of \textbf{0.784}, precision of 0.741 and recall of 0.833 \\
+\hspace*{0.8cm}           2. \texttt{Testing data}:    F1-score of \textbf{0.823}, precision of 0.804 and recall of 0.843 \\
+\hspace*{0.8cm}           3. \texttt{Validation data}: F1-score of \textbf{0.820}, precision of 0.750 and recall of 0.906
 
-As explained in section \ref{sec:ml-metrics}, this is a regression problem, but scored with metrics used for classification tasks. The confusion matrix for the validation data is presented in figure XXX.
+Since the task is scored with metrics used for classification problem, the confusion matrix is generated in figure \ref{fig:cf-matrix-validation}.
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=7cm]{images/cf-matrix-validation.png}
     \caption[Confusion matrix for validation data]{Confusion matrix for the validation data obtain with the best model}
-    \label{fig:lst-data-build}
+    \label{fig:cf-matrix-validation}
 \end{figure}
 
 
@@ -358,7 +358,7 @@ Both integration will be supported by \textit{Azure} services.
 \subsection{Azure Architecture}
 To deploy the model, four Azure services are used: \textit{Functions}, \textit{Queue Storage}, \textit{Web App} and \textit{Application Insights}. Azure Functions allow to run a piece of code on a serverless architecture and for the code to be scaled on demand. The Azure Queue Storage is a service to store large number of messages, which can latter be consumed via HTTP calls. Azure Web App creates web application with built-in autoscale and Azure Applications Insights are used to analyze performances, errors and logs messages. The connection between those services and Dynamics 365 are sketched in figure \ref{fig:azure-deployment}.
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=12cm]{images/azure-archi-weekly.png}
     \caption[Deployment architecture for scheduled predictions]{Connection between Azure services and Dynamics 365 to compute predictions on a recurring basis.}
@@ -385,9 +385,9 @@ Experiments with this architecture showed a total running time of approximately 
 The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, a JavaScript file stored in a Dynamics 365 \textit{Web resource} is sending an HTTP request to the Web App, which computes and returns the prediction.
 
 \subsection{Integration with Dynamics 365}
-The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \texttt{Account} entity page, a section \texttt{ML Predictions} is created with two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}. The first field contains the predicted month for account's next order. The day the machine learning model is run is displayed below, in the second field. This enables CRM's users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information has been added, predictions can be refreshed on-demand by clicking the blue button \texttt{Run predictions}. This button is grayed out and inactive throughout the entire process (approx. 5-10 seconds). No refresh or page reload is necessary, both fields are automatically updated. If the process ends successfully, the button turns out green, but if a mistake happens, the button is red.
+The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \texttt{Account} entity page, a section \texttt{ML Predictions} is created with two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}. An example of such page is visible in figure \ref{fig:dynamics-account-ml-screenshot}. The first field contains the predicted month for account's next order. The day the machine learning model is run is displayed below, in the second field. This enables CRM's users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information has been added, predictions can be refreshed on-demand by clicking the blue button \texttt{Run predictions}. This button is grayed out and inactive throughout the entire process (approx. 5-10 seconds). No refresh or page reload is necessary, both fields are automatically updated. If the process ends successfully, the button turns out green, but if a mistake happens, the button is red.
 
-\begin{figure}[!h]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=12cm]{images/dynamics-account-ml-screenshot.png}
     \caption[Dynamics 365 \textit{Account} entity page]{Dynamics 365 Account entity page. The part related to the machine learning prediction is in the blue rectangle. It contains two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}, as well as a button \texttt{Run prediction}.}
@@ -398,9 +398,20 @@ As the prediction is stored as a CRM field, it can be used to create \textit{Mar
 
 
 % -------------------------------- Section: Further Work
-\section{Further Work} \label{sec:use-case-further-work}
+\section{Discussion} \label{sec:use-case-further-work}
+The models built for this task rely heavily on feature engineering. Indeed, data coming from CRM needs to be combined and reshaped to bring useful value to a machine learning model. The set of features used with the best model is not giving a lot of importance to the \textit{external} data: features related to the weather and price. Based on the customer journey visualization and Contoso's business knowledge, these two external factors must play a role in customer's ordering pattern. Therefore, new features or even new model can be investigated to incorporate such information.
 
+A possible method to improve current models is to include features related to the customer's profile, for example customer's price sensitivity. Such features would help the model to weight the importance of price-related information. It will also enable Contoso to make personalized offers to customers. For example, if a customer is flagged as a \textit{jumper profile} with high price sensitivity, a personalized offer can be proposed in order to retain the customer.
+
+A drawback of using a neural network model compared to a linear or tree-based model is that there are no justifications for the predictions. CRM users have access to the predictions, but there is no feedback nor explanation \textit{why} the neural network outputs such prediction.
+
+The current architecture is built for the current Contoso's usage of predictions: monthly usage of predictions and no time constraint to make them. If the company decides to change the way of working with the predictions, to run them once or twice per week and build new models, the current architecture might not be adequate. The cloud-based components of Azure can be scaled, but creating data on-the-fly is a time-consuming step. Having part of the data static (account-related features) and only build the month-related features like the "\textit{number of weeks since last order}" or "\textit{weather of past week}" is an interesting option.
+
+Finally, LSTM networks are an interesting option if Contoso's decided to change the scoring strategy. For example, if the number of weeks until next order are predicted instead of the number of months, the assumption is that LSTM will give better predictions than a fully-connected network. Indeed, the LSTM models built had a better $t_0\_p_0$ score compared to other models. The assumption is that LSTM models are more robust and confident regarding the \textit{closest} predictions.
 
 
 % -------------------------------- Section: Conclusion
 \section{Conclusion} \label{sec:use-case-conclusion}
+In this project, real-world data coming from a CRM are used to create predictions regarding the date of the next customer order. Predictions are given by a neural network composed of five fully connected layers. Trained with all orders between 2013 and 2016, the model reaches an F1-score of 0.828. The F1-score used is a harmonic mean between the precision and recall of the model, two metrics computed with one-month tolerance on predictions.
+
+An Azure-based architecture supports the incorporation of the predictions into the daily usage of Dynamics 365. This architecture enables recurrent predictions with user-intervention, as well as one-demand prediction requested directly by Dynamics 365 users.
