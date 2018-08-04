@@ -180,7 +180,7 @@ As defined above, the model is planned to be used on a monthly basis and its out
 
 Figure \ref{fig:data-build-example} contains an example of the data creation process. Marked as yellow circles, this account has made four orders in April 2013, March 2014, January 2015 and March 2016. The first entry in the data relates to May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and March 2014, date of account's second order. The same principle is applied to all months, until March 2016, date of the last order made by this account.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \hspace{-1cm}
     \includegraphics[width=17cm]{images/data-build-ml-example.png}
     \caption[Process to build data for machine learning]{Sketch of the process to build data for the machine learning models. Yellow circles model account's orders through time. The entry 1. corresponds to the month April 2013, the entry 17. to September 2014 and the entry 34. to February 2016.}
@@ -297,13 +297,14 @@ Once the model's architecture is chosen, internal parameters of the model can be
     \centering
     \begin{tabular}{l|l|l}
         \textbf{Model part}           & \textbf{Parameter}                 & \textbf{Value}         \\ \hline
-        Training                      & Number of epochs                   & 8                     \\
+        Training                      & Number of epochs                   & 4                     \\
+                                      & Batch size                         & 70             \\
                                       & Input dimension                    & (X,22)                     \\ \hline
-        Hidden layers                 & Number of neurons                  & 200-100-30                     \\
-                                      & Activation function                & selu                     \\
-                                      & Use bias                           & No                     \\ \hline
-        \multicolumn{1}{l|}{Compiler} & \multicolumn{1}{l|}{Loss function} & \multicolumn{1}{l}{msle} \\
-        \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{Optimizer}     & \multicolumn{1}{l}{adam}
+        Hidden layers                 & Number of neurons                  & 200-150-90-60-30                     \\
+                                      & Activation function                & elu                     \\
+                                      & Use bias                           & Yes                     \\ \hline
+        Compiler                      & Loss function                      & log cosh \\
+                                      & Optimizer                          & adam
     \end{tabular}
     \caption{Neural Network parameters for training final model}
     \label{tab:nn-final-parameters}
