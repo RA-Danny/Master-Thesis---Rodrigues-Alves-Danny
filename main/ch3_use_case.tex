@@ -335,15 +335,20 @@ The best model is a Neural Network composed of five fully connected hidden layer
 \hspace*{0.8cm}           2. \texttt{Testing data}:    F1-score of \textbf{0.823}, precision of 0.804 and recall of 0.843 \\
 \hspace*{0.8cm}           3. \texttt{Validation data}: F1-score of \textbf{0.820}, precision of 0.750 and recall of 0.906
 
-Since the task is scored with metrics used for classification problem, the confusion matrix is generated in figure \ref{fig:cf-matrix-validation}.
+Since the task is scored with metrics used for classification problem, the confusion matrix obtain with the validation data is generated in figure \ref{fig:cf-matrix-validation}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=7cm]{images/cf-matrix-validation.png}
-    \caption[Confusion matrix for validation data]{Confusion matrix for the validation data obtain with the best model}
+    \includegraphics[width=15cm]{images/cf-matrix-validation_complete.png}
+    \caption[Confusion matrix for validation data]{Confusion matrices for the validation data obtain with the best model. Two version: pure counts (left) and normalized per row (right).}
     \label{fig:cf-matrix-validation}
 \end{figure}
 
+When an account makes an order, almost one time on two the model predicts it at the correct month-level and 25\% of the cases the model predicts the order one month too late. Among the predictions made by the model, 62.94\% of the predictions are correct at the month-level while 27.63\% are wrong for one month. Regarding the errors, most of them are wrong for two months (6.89\%) and only 2.54\% of the predictions are completely wrong. This seems to indicate that the model makes robust predictions.
+
+The wrong predictions of the model indicate that in 40\% of the cases the predictions is wrong of two months and wrong of three months in 22\%. This means that a slight improvement on the model can result in much more precise and trustworthy results. Error analysis also indicates that the model can sometimes be wrong for more than 40 months. This is due to \textit{inactive accounts}, clients used to order, never order more for quite some time and order again. By classifying an account as \textit{inactive} if it hasn't made an order in the last 22 months, 8.09\% of the errors would have been avoid.
+
+Analyzing the \textit{customer journeys} of wrongly predicted accounts reveals that some orders are simply impossible to predict and doesn't follow a pattern. But it also shows that the model could be improved by giving more weight and importance to the previous order. This is particularly true for jumper accounts: the client made an infidelity one year between two orders with Contoso and the model is not able to realize that the client \textit{skipped} one order.
 
 % -------------------------------- Section: Deployment
 \section{Deployment} \label{sec:crm-deployment}
