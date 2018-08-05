@@ -250,9 +250,9 @@ The next experiments are related to the set of features used. With the predictio
 \end{figure}
 
 
-After optimizing the set of features, \textit{ExtraTree} regressor's internals parameters can also be optimized. The primary goal is to reduce the overfitting produced by the tree. Two parameters have been fine-tuned: \texttt{max\_depth} and \texttt{min\_samples\_split}. The \texttt{max\_depth} parameter has no value by default, therefore the tree expands itself until all leaves are pure. The \texttt{min\_samples\_split} parameter controls the minimum number of samples required for a node to be split. By default, \textit{ExtraTree} will split each node which isn't a leaf and combined with no \texttt{max\_depth}, overfitting on the training data is obvious. 
+After optimizing the set of features, \textit{ExtraTree} regressor's internals parameters can also be optimized. The primary goal is to reduce the overfitting produced by the tree. Two parameters have been optimized: \texttt{max\_depth} and \texttt{min\_samples\_split}. The \texttt{max\_depth} parameter has no value by default, therefore the tree expands itself until all leaves are pure. The \texttt{min\_samples\_split} parameter controls the minimum number of samples required for a node to be split. By default, \textit{ExtraTree} will split each node which isn't a leaf and combined with no \texttt{max\_depth}, overfitting on the training data is obvious. 
 
-Most relevant results of this fine-tuning phase are reported in table \ref{tab:tree-fine-tune}.
+Most relevant results of this optimization phase are reported in table \ref{tab:tree-fine-tune}.
 
 \begin{table}[htbp]
     \centering
@@ -285,13 +285,13 @@ With the best combination of \texttt{max\_depth} and \texttt{min\_samples\_split
 Alongside with experimenting models and new parameters, optimizing the data to train model has been examined. In previous experiments, data-related optimizations have only concern the features set, but there are some others possibilities. By investigating the data, three possible ways to reshape it were found. 
 The first one consist of reducing the data by removing accounts with less than five entries. Then, for the remaining accounts, take only five random entries. The goal is to reduce the potential influence of accounts ordering very often and also reduce the potential noise in the data bring by accounts with very few entries, for example an account with four orders spread across five months. A second attempt to reduce the influence of \textit{extreme} accounts is to simply remove all accounts ordering every month or every two months. The third and last experiment to reshape the data is to have the same number of entries per output. All these three attempts to reshape the data never improved the F1-score previously obtained.
 
-To summarize this section about experimenting with several models available in \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor trained on a small set of features. After a fine-tuning phase, it achieves a F1-score of 0.715 on the testing dataset, a precision score of 0.813 and a recall score of 0.638.
+To summarize this section about experimenting with several models available in \textit{Scikit-learn}, the best model is an \textit{ExtraTree} regressor trained on a small set of features. After an hyperparameter optimization phase, it achieves a F1-score of 0.715 on the testing dataset, a precision score of 0.813 and a recall score of 0.638.
 
 
 \subsection{Neural Networks}
 The \textit{ExtraTree} model has a big flaw: it's only using six features and none about the weather nor product's price. When adding that kind of features, the model isn't as good as before. Therefore, a new type of machine learning model is investigated: Neural Networks. Build with the \textit{Keras} framework, six different architectures of Neural Networks are experimented, all based on fully-connected layers. Similar to what has been done with previous models, several sets of manually selected features are used. The model achieving the best F1-score is a complete model composed of five fully-connected hidden layers trained with a set of 22 features and reaching an F1-score of \texttt{0.820} on the test data. Details results, and analysis of all tested models are reported in annex \ref{annex:nn-experiments}.
 
-Once the model's architecture is chosen, internal parameters of the model can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the fine-tuning phase has been done sequentially: starting from the best model in \ref{annex:nn-experiments}, optimize the training batch size, then the activation function of hidden layers, the model's compiler loss function and finally the model's optimizer function (results reported in annex \ref{annex:nn-fine-tuning}). Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
+Once the model's architecture is chosen, internal parameters can be investigated. Four parameters deserve some attention: the training \texttt{batch size}, model's compiler \texttt{loss function} and \texttt{optimizer} and the hidden layers \texttt{activation} function. Due to all possible values for those parameters, the grid-search hyperparameter tuning phase has been done sequentially: starting from the best model in \ref{annex:nn-experiments}, optimize the training batch size, then the activation function of hidden layers, the model's compiler loss function and finally the model's optimizer function (results reported in annex \ref{annex:nn-fine-tuning}). Parameters of the model obtained are outlined in table \ref{tab:nn-final-parameters}.
 
 \begin{table}[b]
     \centering
@@ -323,7 +323,7 @@ To be able to use LSTMs, the data need to be reshaped. Previous models were expe
     \label{fig:lst-data-build}
 \end{figure}
 
-Similar to the experiments with previous neural networks, several model architectures have been investigated to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM part. With the first experiments, results were similar to the one obtained with only fully-connected layers but on the batch size fine-tuning phase, results didn't improve the testing F1-score. Results are available in annex \ref{annex:lstm-experiments}.
+Similar to the experiments with previous neural networks, several model architectures have been investigated to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM part. With the first experiments, results were close to the one obtained with only fully-connected layers but not better and with a longer training time. Results are available in annex \ref{annex:lstm-experiments}.
 
 
 
