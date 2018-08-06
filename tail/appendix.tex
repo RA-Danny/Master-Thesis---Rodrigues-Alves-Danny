@@ -3,7 +3,7 @@
 % ------------------------------------------ CRM Data Facts
 \chapter{Customer Journey}
 
-Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account reservoir. Monthly temperatures degrees and prices are also plotted.
+Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account's reservoir. Monthly temperatures degrees and prices are also plotted. The x-axis indicates the date of when was the order made and for the monthly temperature and price. There are three y-axis: one for the quantity ordered, one for the monthly temperature (in blue), and one for the monthly price (in green). \\
 
 \begin{figure}[htbp]
     \centering
@@ -127,7 +127,7 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
 \begin{figure}[h]
     \centering
     \includegraphics[width=10cm]{images/nn-sketch.png}
-    \caption{Sketch a the Neural Network architecture composed of fully-connected layers.}
+    \caption{Sketch of a the Neural Network architecture composed of fully-connected layers.}
     \label{fig-annex:nn-sketch}
 \end{figure}
 
@@ -141,7 +141,7 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
 \pagebreak
 
 \noindent\textbf{Set of features used:}\\
-\texttt{Features 1}: Set of features composed of the entire XXX features created. \\
+\texttt{Features 1}: Set of features composed of the entire 122 features created. \\
 \texttt{Features 2}: Set of 41 features related to account, previous order and current month with price and weather data. \\
 \texttt{Features 3}: Set of 10 features related to account, previous order and current month but without price and weather information. Based on results from Sklearn models.\\
 \texttt{Features 4}: Set of 23 features similar to set 4 but with price and weather data. \\
@@ -150,9 +150,9 @@ Example of a \textit{customer journey} plot. Each dot represents an order made b
 
 
 \noindent\textbf{Comments on table \ref{tab-annex:nn-experiments}}\\
-\indent Models 6 and 5 are the two models with the better predictions. Those models are the most complete ones, with three hidden layers and it appears that the more neurons per hidden layer the best. In terms of running time, model 6 takes 2.5 more time to train per epoch.
+\indent Models 6 and 5 are the two models with the better predictions. With three hidden layers, those models are the most complete ones and it appears that the more neurons per hidden layer the best. In terms of running time, model 6 takes 2.5 more time to train per epoch.
 
-After the model's architecture, the set of features is the most important parameter. Features set 3 and 4 are the one performing the best with models 5 and 6. Those sets are based on the best feature for the \textit{ExtraTree} model and for model 5 and 6, when weather and price related features are considered, the model performs slightly best. Based on the results obtain with feature set 5 and 6, it seems that weather-related features are more usefull to the predictions than price-related ones.
+After the model's architecture, the set of features is the most important parameter. Features set 3 and 4 are the ones performing the best with models 5 and 6. Those sets are based on the best features for the \textit{ExtraTree} model. When considering weather and price related features (set 4), models 5 and 6 performs slightly best. Based on the results obtain with feature set 5 and 6, it seems that weather-related features are more useful to the predictions than price-related ones.
 
 The feature set 4 contains the following features: 7, 14, 15, 18, 19, 20, 21, 24, 25, 34, 35, 39, 40, 41, 42, 43, 44, 48, 49, 51, 52, 53 and 54.
 
