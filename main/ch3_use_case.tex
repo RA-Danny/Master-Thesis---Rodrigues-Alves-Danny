@@ -1,22 +1,21 @@
 \chapter{Use case: Next order prediction} \label{chapter:use-case}
 
-One of the goals of this project is to integrate an artificial intelligence solution within a CRM. After the analysis reported in chapter \textit{CRM AI}, it has been decided to develop a predictive machine learning model based on CRM data. This part if the thesis has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Contoso} \footnote{Client's name and business subject to confidentiality.}.
+One of the goals of this project is to integrate an artificial intelligence solution within a CRM. Based on the research reported in chapter \textit{CRM AI}, it has been decided to develop a predictive machine learning model with real world data from a CRM. This part of the thesis has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Contoso} \footnote{Client's name and business subject to confidentiality.}.
 
-This chapter details the entire machine learning project. Sections \ref{sec:use-case} and \ref{sec:ml-metrics} explain the business problem \textit{Contoso} is currently facing and how a machine learning solution might solve it. The data contained in Contoso's CRM is explained in section \ref{sec:crm-data} and section \ref{sec:ml-experimentation} details the machine learning experimentations based on this data. The deployment and integration with Contoso's CRM of the model created are outlined in section \ref{sec:crm-deployment}. Finally, sections \ref{sec:use-case-further-work} and \ref{sec:use-case-conclusion} conclude the chapter with a reflection on the entire initiative.
+This chapter details the entire machine learning project. Sections \ref{sec:use-case} and \ref{sec:ml-metrics} explain the business problem \textit{Contoso} is facing and how a machine learning solution might solve it. The data contained in Contoso's CRM is reported in section \ref{sec:crm-data} and section \ref{sec:ml-experimentation} details the machine learning experimentations. The model's deployment and integration within Contoso's CRM are outlined in section \ref{sec:crm-deployment}. Finally, sections \ref{sec:use-case-further-work} and \ref{sec:use-case-conclusion} conclude the chapter with a reflection on the entire initiative.
 
 % -------------------------------- Section: Client's use case
 \section{Client's use case} \label{sec:use-case}
-\textit{Contoso} is an energy-focus enterprise active overall Switzerland offering several products and services. One of their product is subject to a very tense market, where its characteristics are the same among all competitors in the market with the price as the only differentiator. When dealing with this product, several of its specificities must be taken into account:
+\textit{Contoso} is an energy-focus company active overall Switzerland. Among the offers and services, Contoso's key-product is subject to a very tense market, where its characteristics are the same among all competitors and the price is the only differentiator. When dealing with this product, several of its specificities must be considered:
 \begin{itemize}
-\item The product is classified as a \textit{safety need} in Maslow's \textit{hierarchy of }needs\cite{wiki:Maslow's_hierarchy_of_needs}, meaning that people don't buy it because the \textit{like} it but because they \textit{need} it. 
-\item Due to its classification in Maslow's hierarchy, the product is usually stored in high quantities. The typical customer will make a large order, fill its supplies, consume the product and once fully consumed, the product is bought again in large quantities. Therefore, the product is not bought on a daily basis but rather on an annual basis. This is a real difficulty for Contoso while trying to build customer loyalty.
-\item Since the product's characteristics are the same for the entire market, the price is the only variable that companies can \textit{play} with. Nevertheless, part of the price is subject to global market variation, from which companies will adapt their margins. As all stock market, the prices can vary, even marginally, each day.
+\item The product is classified as a \textit{safety need} in Maslow's \textit{hierarchy of }needs\cite{wiki:Maslow's_hierarchy_of_needs}. People buy the product because they \textit{need} it and not because they \textit{like} it.
+\item Due to its classification in Maslow's hierarchy, the product is usually stored in high quantities. The typical customer will make a large order, fill its supplies, consume the product and once fully consumed, the product is bought again in large quantities. Therefore, the product is not bought on a daily or weekly basis but rather on an annual basis. This is a real difficulty for Contoso while trying to build customer loyalty.
+\item Since product's characteristics are the same for the entire market, the price is the only variable that companies can \textit{play} with. Nevertheless, part of the price is subject to global market variations, from which companies will adapt their margins. As all stock market, the prices can vary, even marginally, each day.
 \end{itemize}
 
- Based on these particularities, building a solid customer relationship is difficult for Contoso: Customers only need to make one order per year in average and they are usually not subject to an immediate need. Therefore, they can take the time to compare the price offered by all suppliers in the market and make an order accordingly. This explains why Contoso is facing a high customer turnover and often dealing with \textit{one-time customers}, as shown by figure \ref{fig-annex:orders_per_accounts}.
+ Based on these particularities, building a solid customer relationship is difficult for Contoso: Customers only need to make one order per year in average and they are usually not subject to an immediate need. They can take the time to compare the price offered by all suppliers in the market and make an order accordingly. This explains why Contoso faces a high customer turnover and often deals with \textit{one-time customers} (32.02\% of the customers in the last five years have only made one order).
  
- 
- To dwindle customer churn and get lost clients back, \textit{Contoso} is building \textit{customer recovery} plans and reinforcing interactions with other products and services to form a complete ecosystem, but they want something uniquely targeting their key-product. Currently, Contoso's marketing team are contacting clients with annual newsletters. Those newsletters are sent to each client every year around the same period. The company wants to strengthen this marketing process by reaching out to clients at the perfect time, juste before they start to search for offers from the competition. This will enable Contoso to retain clients and ultimately build customer loyalty.
+ To dwindle customer churn and get lost clients back, Contoso is building \textit{customer recovery} plans and reinforcing interactions with other products and services to form a complete ecosystem, but they want something uniquely targeting their key-product. Currently, Contoso is contacting clients with annual newsletters. Those newsletters are sent to each client every year around the same period. The company wants to strengthen this process by reaching out to clients at the perfect time, just before they start to search for offers from the competition. This will enable Contoso to retain clients and ultimately build customer loyalty.
  
  
 % -------------------------------- Section: Project outline
@@ -24,7 +23,7 @@ This chapter details the entire machine learning project. Sections \ref{sec:use-
 
 
 \subsection{Problem definition}
-As defined in the previous section, the goal of this initiative is to build a machine learning model that predicts the time of a customer's next order. This problem can be formalized as a regression problem, for which the machine learning model will output the date of next order: at date $d$, the model will predict $i$, the number of days until next order. So $d+i$ will give the precise date of a customer's next order. Variants are to define $i$ as the number of weeks or months until next order. The date will be less precise but the predictions might turn out to be more satisfying. Another possibility is to formalize it as a classification task with a binary outcome: \textit{"Will this customer make an order in the coming day/week/month ?"}. After discussion with Contoso, it has been decided to define the output of the model as \textit{the number of months until customer's next order}. In details, it has been decided first to work with regression models to have multiple ranges of outputs. Then, for the output's granularity (day, week or month), predicting the number of months until next order \textit{should} give stronger results. It will allow Contoso to asses the extent to which regression techniques and models are suited to this problem and, if the first phase is successful, try to improve the predictions with outputs at the week level.
+As defined in the previous section, the goal of this initiative is to build a machine learning model that predicts the time of a customer's next order. This problem can be formalized as a regression problem, for which the model outputs the date of next order: run at date $d$, the model predicts $i$, the number of days until next order. So $d+i$ will give the precise date of a customer's next order. Variants are to define $i$ as the number of weeks or months until next order: the date will be less precise but the predictions might turn out to be more satisfying. Another possibility is to formalize it as a classification task with a binary outcome: \textit{"Will this customer make an order in the coming day/week/month ?"}. After discussion with Contoso, it has been decided to define the output of the model as \textit{the number of months until customer's next order}. In details, it has been decided first to work with regression models to have multiple ranges of outputs. Then, for the output's granularity (day, week or month), predicting the number of months until next order \textit{should} give stronger results. It will allow Contoso to asses the extent to which regression techniques are suited to this problem and, if the first phase is successful, try to improve the predictions with outputs at the week level.
 
 
 
@@ -39,14 +38,15 @@ The last step of this process is very important, as it will ensure that the comp
 
 
 \subsection{Machine learning scoring strategy}
-Now that the machine learning goal and usage have been specified, the metrics for its success must be defined. As stated above, this is a regression model with a real number as output. Usual metrics for regression problems like \textit{Mean Absolute Error} (MAE) or \textit{Root Mean Squared Error} (RMSE) are not well suited for this project and the usage of predictions made by Contoso. As specified above, the company plans to get in touch with a client only if the prediction is below $2$. Therefore, if the output of a model is equal to $7.0$ or $4.35$, it ends up being the same for Contoso. This explains why MAE or RMSE cannot be used to evaluate machine learning models performance. 
+Now that the machine learning goal and usage have been specified, the metrics for its success must be defined. As stated above, this is a regression model with a real number as output. Usual metrics for regression problems like the \textit{Mean Absolute Error} (MAE) or \textit{Root Mean Squared Error} (RMSE) are not well suited regarding the usage of predictions made by Contoso. The company plans to get in touch with a client only if the prediction is below $2$. Therefore, if the output of a model is equal to $7.0$ or $4.35$, it ends up being the same for Contoso. This explains why MAE or RMSE cannot be used to evaluate machine learning models performance. 
 
 As regression metrics are not applicable, models will be assessed with custom metrics inspired by classification tasks: precision, recall, and F1-score. 
 
 To transform the regression problem into a classification one, model's predictions are classified into one of the following four classes: \texttt{0, 1, 2 or 3+}. Class \texttt{0} is meant for predictions between 0 and 1 (excluded) - clients that should make an order in the current month. Same idea for classes \texttt{1} and \texttt{2}. Class \texttt{3+} regroups all predictions with an output bigger or equal to 3 - the client's next order should occur in three or more months and will not be used by Contoso.
 
-\begin{adjustwidth}{-1.7cm}{}
-    \begin{minipage}[b]{0.60\linewidth}
+In the formulas below, $t_i\_p_j$ corresponds to the sum of true orders occurring in $m+i$ months and predicted to occur in $m+j$ months, where $m$ is the current month. For example $t_0\_p_0$ corresponds to the sum of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
+
+\begin{minipage}[b]{0.52\linewidth}
     \resizebox{1.0\columnwidth}{!}{
         \begin{tabular}[t]{c|c|
                 >{\columncolor[HTML]{EFEFEF}}c|c|
@@ -64,23 +64,21 @@ To transform the regression problem into a classification one, model's predictio
                 J        & 0       & 0             & 2.5     & 2            
         \end{tabular}
         }
-        \captionof{table}{Example of output truth and predictions}
-        \label{table:example_truth_preds} 
-    \end{minipage}
-    \hspace{1.0cm}
-    \begin{minipage}[b]{0.45\linewidth}
-        \offinterlineskip
-        \moveright 1cm \hbox{\raisebox{1.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{14cm}{True class\\[50pt]}}}\par}
-        \hspace*{1cm}\MyHBoxT[\dimexpr5.1cm]{Predicted class}\vspace*{-0.4cm}
-        \hspace*{1cm}\MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\vspace*{-0.2cm}
-        \MyTBox{0}{2}{0}{1}{0}
-        \MyTBox{1}{1}{1}{0}{0}
-        \MyTBox{2}{0}{1}{0}{1}
-        \MyTBox{3+}{1}{0}{1}{1}
-        \captionof{table}{Confusion matrix for table \ref{table:example_truth_preds}}
-        \label{table:example_confusion_matrix} 
-    \end{minipage}
-\end{adjustwidth}
+    \captionof{table}{\small Example of truth and predictions classes}
+    \label{table:example_truth_preds} 
+\end{minipage}
+\begin{minipage}[b]{0.45\linewidth}
+    \offinterlineskip
+    \moveright 6.7cm \hbox{\raisebox{2.8cm}[10pt][10pt]{\rotatebox[origin=c]{90}{\parbox[c][0pt][c]{14cm}{\small\rotatebox[origin=c]{180}{True class}\\[40pt]}}}\par}
+                    \MyHBoxT[\dimexp 10.1cm]{\small Predicted class}\vspace*{-0.3cm}
+    \hspace*{1cm}  \MyHBox{0}\MyHBox{1}\MyHBox{2}\MyHBox{3+}\par
+    \hspace*{1cm}  \MyTBox{0}{2}{0}{1}{0}
+    \hspace{1cm}  \MyTBox{1}{1}{1}{0}{0}
+    \hspace{1cm}  \MyTBox{2}{0}{1}{0}{1}
+    \hspace{1cm}  \MyTBox{3+}{1}{0}{1}{1}
+    \captionof{table}{\small Confusion matrix for table \ref{table:example_truth_preds}}
+    \label{table:example_confusion_matrix} 
+\end{minipage}
 
 
 Based on this classes assignment, a confusion matrix can be generated. Then, custom metrics inspired by precision, recall, and F1-score are computed:
@@ -101,11 +99,11 @@ Based on this classes assignment, a confusion matrix can be generated. Then, cus
     For the example in table \ref{table:example_confusion_matrix}, the F1-score is equal to $\frac{2*0.667*0.75}{0.667+0.75} = 0.71$
 \end{itemize}
 
-In the formulas above, $t_i\_p_j$ corresponds to the sum of true orders occurring in $m+i$ months and predicted to occur in $m+j$ months, where $m$ is the current month. For example $t_0\_p_0$ corresponds to the sum of orders occurring in the current month and predicted as such (top left case in the confusion matrix).
 
-The metric \textbf{F1-score} will be the benchmark metric to compare models. For all metrics, best score is \texttt{1.}0, worst is \texttt{0.0}.
 
-The dataset used in this project is divided into training, testing and validation sets. The training set is composed of orders that took place between 2013 and 2016. It will be used to train all models. Data related to orders that occurred in 2017 form the testing set, use to test each model created. Finally, data associated with orders made from January 2018 to June 2018 are in the validation dataset, only used once to compute the final score in \ref{sec:best-model}.
+The \textbf{F1-score} metric is the benchmark metric to compare models. For all metrics, best score is \texttt{1.}0, worst is \texttt{0.0}.
+
+The dataset used in this project is divided into training, testing and validation sets. The training set is composed of orders that took place between 2013 and 2016. It is used to train all models. Data related to orders that occurred in 2017 form the testing set, use to test each model created. Finally, data associated with orders made from January 2018 to June 2018 are in the validation dataset, only used once to compute the final score in \ref{sec:best-model}.
 
 % -------------------------------- Section: Data
 \section{Data from CRM} \label{sec:crm-data}
@@ -234,7 +232,7 @@ In this initial phase, all models have been trained with scikit-learn's default 
         ExtraTrees        & 0.996     & 0.999  & 0.998                         & 0.044     & 0.829  & 0.083    \\
         Linear Regression & 0.011     & 0.187  & 0.021                         & 0.028     & 0.305  & 0.051    
     \end{tabular}
-    \caption{Prediction scores for first models, ranked by their F1-score on the testing set}
+    \caption[Prediction scores for first models]{Prediction scores for first models, ranked by their F1-score on the testing set}
     \label{tab:scores-simple-models}
 \end{table}
 
@@ -275,7 +273,7 @@ Most relevant results of this optimization phase are reported in table \ref{tab:
     10	&  50   &  	0.439  &  0.388 \\
     10	&  70   &  	0.378  &  0.364 
     \end{tabular}
-    \caption{F1-scores on training and testing data. Parameters investigated are the \texttt{max\_depth} and \texttt{min\_samples\_split}. Models trained on a set of six features. Table sorted by decreasing score on the testing set.}
+    \caption[F1-scores for ExtraTree hyperparameters optimization]{F1-scores on training and testing data. Parameters investigated are the \texttt{max\_depth} and \texttt{min\_samples\_split}. Models trained on a set of six features. Table sorted by decreasing score on the testing set.}
     \label{tab:tree-fine-tune}
 \end{table}
 

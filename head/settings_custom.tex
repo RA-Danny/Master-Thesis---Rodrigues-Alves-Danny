@@ -31,22 +31,23 @@
 \usepackage{graphicx}
 
 \newcommand\MyBox[1]{%
-  \fbox{\parbox[c][1cm][c]{1cm}{\centering #1}}%
+  \fbox{\parbox[c][0.7cm][c]{0.7cm}{\centering #1}}%
 }
 \newcommand\MyVBox[1]{%
-  \parbox[c][1cm][c]{1cm}{\centering\bfseries #1}%
+  \parbox[c][1cm][c]{0.8cm}{\centering\bfseries #1}%
 }  
-\newcommand\MyHBoxT[2][\dimexpr1cm+2\fboxsep\relax]{%
-  \parbox[c][1cm][c]{#1}{\centering #2}%
+\newcommand\MyHBoxT[2][3cm]{%
+  \parbox[c][1cm][c]{6.1cm}{\centering #2}\par%
 } 
-\newcommand\MyHBox[2][\dimexpr1cm+2\fboxsep\relax]{%
-  \parbox[c][1cm][c]{#1}{\centering\bfseries #2}%
+\newcommand\MyHBox[2][3cm]{%
+  \parbox[c][0.6cm][c]{0.95cm}{\centering\bfseries #2}%
 }  
 \newcommand\MyTBox[5]{%
-  \MyVBox{#1}\MyBox{#2}\hspace*{-\fboxrule}%
+  \MyBox{#2}\hspace*{-\fboxrule}%
   \MyBox{#3}\hspace*{-\fboxrule}%
   \MyBox{#4}\hspace*{-\fboxrule}%
-  \MyBox{#5}\par\vspace{-\fboxrule}
+  \MyBox{#5}\vspace{-0.07cm}%
+  \MyVBox{#1}\par
 }  
 \usepackage[labelfont=bf]{caption}
 \usepackage{changepage}
