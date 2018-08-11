@@ -47,7 +47,7 @@ In a customer relationship management context, artificial intelligence can be us
 % -------- Goal of the analysis
 One of the aims of this thesis is to provided an overview of the integration of artificial intelligence technologies in a CRM context. With the advent of artificial intelligence and its relative ease of access, CRM vendors can consider a new product line around AI. When a CRM editor announces that it will soon integrate some AI components in its solutions, it aims to attract new customers while showing current customers that its system is innovative and at the cutting edge of technology.
 
-CRM vendors claim to have easy to use and well integrated AI solutions, but what is really happening in those solutions? What are the kind of AI technologies used? How easy to configure are those AI features? Are they really useful for the business and tailored? All companies are different, but can they adapt these innovative solutions to their unique business? The research of this section tries to address those issues and really understand what is meant by \textit{CRM AI}.
+CRM vendors claim to have easy to use and well integrated AI solutions, but what is offered in these solutions? What are the kind of AI technologies used? How easy to configure are those AI features? Are they really tailored and useful for the business? All companies are different, but can they adapt these innovative solutions to their unique business? What AI functionalities will become \textit{mandatory} for a good CRM? The research of this section tries to address those issues and really understand what is meant by \textit{CRM AI}.
 
 
 % -------------------------------- Section: Editors Market
@@ -55,15 +55,73 @@ CRM vendors claim to have easy to use and well integrated AI solutions, but what
 
 
 \subsection{CRM Editors analyzed}
-% Ways of work
+The CRM software market is growing rapidly, especially due the awareness of customer experience's importance and the expansion of the cloud-based solutions\cite{crm-revenue}. Indeed, all types of companies, regardless of their size or revenues, can have their own CRM without the need to invest time and money in hardware. Opposed to on-premise deployment, where the CRM runs in the infrastructure created and maintained by the company, cloud-based deployment are today the most request deployment configuration\footnote{In 2008, only 12\% of the requests had a preference for cloud-based deployment. Six years later the trend is totally reversed, with 87\% of the deployment's requests regarding cloud-based solutions and 13\% on-premise CRMs \cite{crm-deployment-stats}.}.
 
+There is a lot of offers in the CRM market\footnote{For example, \textit{Wikipedia} lists a total of 29 CRM systems.}. Some editors build complete CRM solution while smaller ones are only focus on one or two applications, like a sales force automation or customer engagement solutions. The editors analyzed in this project have been selected based on Gartner's \textit{Magic Quadrant}\footnote{Gartner is a research and advisory firm providing analysis on the information technology field.}. Two types of magic quadrant are directly related to customer relationship management: sales force automation and customer engagement center (figures \ref{fig:magic-quadrant-sales-force} and \ref{fig:magic-quadrant-customer-engagement}). A magic quadrant contains four groups to classify CRMs and in this research, all global CRMs classified as \textit{Leaders} are considered: \textit{Salesforce}, \textit{Microsoft}, \textit{Oracle} and \textit{Pegasystems}. Despite not being classified as a \textit{leader}, \textit{SAP} is also considered since it is the third largest publisher\cite{crm-market-share}. These five CRMS are the big fishes in the market (40.4\% of the market) and are the most likely to invest in AI features. Nevertheless, to stand out in the market, smaller companies specialize their products around a specific CRM's applications. To be as complete as possible, CRM editors \textit{SugarCRM}, \textit{Infor}, \textit{Zoho} and \textit{Zendesk} are also investigated.
+
+\begin{figure}[!h]
+    \begin{minipage}[c]{0.48\linewidth}
+        \includegraphics[width=\linewidth]{images/magic_quadrant_sales_force_automation.png}
+        \caption[Magic Quadrant for Sales Force Automation]{Gartner, Magic Quadrant for Sales Force Automation, July 2017}
+        \label{fig:magic-quadrant-sales-force}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.49\linewidth}
+        \includegraphics[width=\linewidth]{images/magic_quadrant_customer_engagement_center.png}
+        \caption[Magic Quadrant for the CRM Customer Engagement Center]{Gartner, Magic Quadrant for the CRM Customer Engagement Center, May 2017}
+        \label{fig:magic-quadrant-customer-engagement}
+    \end{minipage}
+\end{figure}
+
+To analyze all those CRM editors, their website, press releases, community forums and knowledge base are used. Blog posts, specialized websites, and analyst firm's report are also widely used. Note that it wasn't possible to configure and test the functionalities detailed in the following sections. Products and features announced by CRM's editors after April 2018 are not taken into account in this research.
 
 \subsection{CRM Editors review}
-CRM Editors organized by alphabetical order ?
+
+\subsubsection*{Dynamics 365}
+Dynamics 365 is the CRM build by Microsoft. Created in 2003 under the name Microsoft Dynamics CRM, the product was rebranded Dynamics 365 when an Enterprise Resource Planning (ERP) solution has been combined with the CRM. One of the key characteristics of Dynamics 365 is the native integration with other Microsoft products, like Microsoft Exchange, Office 365, Sharepoint and PowerBI. More recently, Dynamics 365 is building synergies with Azure technologies, which seems to be the foundation for AI inside Dynamics 365. Microsoft has added four functionalites into Dynamics 365 labelled as \textit{intelligent}. First there is \textit{Social Insights}, a feature integrated in the Microsoft Social Engagement platform to monitor social networks. Social Insights focus on monitoring social media, especially to spot emerging trends in comments. It can then be integrate with Dynamics 365 processes to create customer service cases based on comment's content. A second feature is named \textit{Relationship Insights} which outputs facts mainly based on emails, for example email open and reply rates or when is the best time to send an email to a specific contact. Then the feature \textit{Organization Insights} also computed some facts about the overall performance of the customer service. Even if labelled as \textit{intelligent}, the three features have nothing to do with AI, but the last one does. Mid-2017 Microsoft launched a preview of \textit{Dynamics Customer Insights}, a combined product of Azure and Dynamics 365 available through the Azure portal (and not built-in Dynamics 365). This product can support an entire machine learning project, from data collection to results visualization. First combine data under the same data model (CRM, Blob Storage - csv files e.g.), then link the data together. First AI brick: predictive match. Then predictive scoring, probably based on AutoML. Then use the results to create segments and visualization.
+
+Small word about Azure, namely the Microsoft Cognitive Services. But specify that it is not part of Dynamics 365, not facilitate integration neither.
+
+\subsubsection*{Infor CRM}
+Infor is a business cloud application provider that offers a CRM as part of its \textit{Customer Experience Suite}. Infor CRM - that's the name of the product - is composed of sales, marketing, and customer service applications. In July 2017, Infor announced \textit{Coleman}, an AI platform available as a virtual assistant. Accessible by voice or chat, CRM users use it to perform simple and predefined tasks, such as searching for information related to a CRM' contact or aggregating sales revenue for the last month. Infor CRM is available as a \textit{SaaS} hosted in \textit{Amazon Web Services} (AWS) and Coleman was built with \textit{Amazon Lex}, a product meant to build conversational interfaces. This seems to be Infor's strategy for AI: using existing frameworks such as AWS to extend their CRM functionalities.
+
+Infor also claims to have a sales intelligence for CRM, with features that give insights about the next likely purchase of a customer, the customer's risk of churn and client segmentation based on their purchase history. It is not clear if those features are already implemented, as they only appear in Infor's marketing content.\nocite{infor-website}
+
+
+\subsubsection*{Oracle}
+Second-largest software maker by revenue after Microsoft, Oracle proposes CRM solutions via two products: \textit{Oracle Siebel} for on-premise deployments and \textit{Oracle CRM} for SaaS. Only available for the cloud, \textit{Adaptive Intelligence} applications have been launched in 2017. Instead of regrouping all their AI solutions under a general brand name, Oracle claims to \textit{avoid the hype and focusing on building apps that people can make money with}\cite{https://www.techemergence.com/crm-artificial-intelligence-trends-across-salesforce-oracle-sap/}. The philosophy is to build ready-to-use applications that CRM users can quickly integrate into their current system to add a layer of \textit{intelligence}.
+
+These adaptive intelligent applications\footnote{\textit{Adaptive Intelligent} apps can also be abbreviated \textit{AI} apps...} announced by Oracle concern several areas of customer relationship management, from the sales - next best sales actions or lead scoring - to the customer service - automated answers - to the marketing division -  audiences segmentation, optimized campaign channel and send time. Despite having been in contact with Oracle's team, it was not possible to have a list of the applications already available or to have details about some features, like the \textit{next best sales actions} feature. It seems that artificial intelligence components to be integrated into Oracle CRM are at an early stage of development and not ready to be used by users. 
+
+
+\subsubsection*{Pega CRM}
+Pegasystems Inc. is a software company developing a CRM product based on their business process management (BPM) expertise. Pega CRM's revenue is highly dependent on its on-premise solution: \textit{SaaS} is estimated to represent only 8\% of the total revenue according to Gartner. This explains why Pegasystems is the only CRM's editor in this study to propose AI features for both on-premise and cloud deployments.
+
+Artificial Intelligence solutions are divided into two products. There is a virtual assistant which pre-built integration into Facebook Messenger, Amazon Alex and a chat. This assistant has no functionalities or scenarios: it is meant as a development framework with out-of-the-box NLP and text analytics capabilities, such as intent and entity detection. CRM developers can then built their own scenarios and processes. The virtual assistant can also be integrated to treat incoming emails. Such \textit{email assistant} can analyze the content and redirect an email to the most appropriate person.
+
+A second product available in Pega CRM is named \textit{Customer Decision Hub}, a centralized set of AI capabilities deployed across CRM applications. For the marketing, a recommender system is used to propose the most appropriate product to customers. The sales application contains a lead and opportunity scoring feature as well as a customer risk of churn evaluation. There are also two products that have been announced recently. First, an AI-coach for salespeople providing personalized advises and tips to under-performing sellers. Finally, an update on the \textit{Customer Decision Hub} will enable to build machine learning models and integrated them directly into CRM's processes. This tool is meant to build predicting models in a similar way as \textit{Dynamics Customer Insights} does, but the user can choose the type of machine learning model to use. Models are saved in the \textit{Predictive Model Markup Language} (PMML) language\footnote{PMML is an XML file format for predictive models that can be exchanged between different analytical applications. It can contain data transformations (pre- and post-processing) as well as one or more predictive models \cite{pmml}.}. This enables users to import their own models, nevertheless with some restrictions. Models can also be defined as an \textit{Adaptive analytics} model that will be retrained when new customer data is available.
+
+\subsubsection*{Salesforce}
+\subsubsection*{SAP}
+
+
+\subsubsection*{SugarCRM}
+SugarCRM is the most important CRM editor relying on an open-source technology. Back in 2016, SugarCRM announced its plans regarding the usage of AI inside CRM. Two products were under investigation. The first was \textit{Candace}, an AI-powered intelligent agent to assist CRM users in their daily tasks, like setting up meeting, throwing reminders or monitoring social networks to spot client's dissatisfaction signs. Another announcement concerned \textit{Sugar Intelligence Service}, supposed to bring AI-features like lead and opportunity scoring or text sentiment analysis into the CMR. Since then, no evolution has been announced. By reading blog posts written by SugarCRM head of corporate strategy, CRM powered by artificial intelligence features is not a priority and they are taking a \textit{wait and see} approach.
+
+\subsubsection*{Zendesk}
+Zendesk is not a global CRM, it has no sales force automation nor developed marketing product. Nevertheless, it is one of the leaders for customer support solution, extremely popular in mid-size companies. Zendesk has a full range of functionalities relying on AI involving customer's ticket: redirection to the most appropriate person, automated prioritization, and customer rusk of churn. It can compute a satisfaction prediction score for each customer, based on the ticket content and client's support history. Zendesk also offers a framework to develop chatbots.
+
+\subsubsection*{ZohoCRM}
+Zoho Corporation is specialized in developing business and IT solutions available as SaaS. The CRM - \textit{Zoho CRM} - has all its AI features regrouped under \textit{Zia}, defined as an artificial intelligence powered sales assistant.
+As an assistant, CRM's users can interact with Zia via voice or chat to perform some pre-defined tasks as adding a note to a meeting or retrieving client's contact information. Zoho provides an user-interface to create new capabilities for Zia without coding-skills.
+
+Zia is a chatbot but it's also encapsulates other AI features of ZohoCRM, among which lead scoring, anomalies detection to monitor sales, a feature to monitor the tasks perform by CRM's user and proactively suggest new process to combine them, email sentiment analysis and an indication on the best time to contact each client. It's not obvious to understand if artificial techniques are really being used for these functionalities. While it is clear that email sentiment analysis relies on NLP techniques, the anomalies detection or best time to contact a client features can be done without any kind of AI.
 
 % -------------------------------- Section: DMP Platforms
 \section{Data Management Platforms}
 May be just a subsection, very fast on the subject
+
+--> ADOBE HERE ?
 
 
 % -------------------------------- Section: Editors Ranking
@@ -93,4 +151,8 @@ Gartner:
     - Using AI CRM functionality will not make CRM users data scientist. However, packaged CRM AI capabilities provide a path tho learn and experiment ML and NLP technologies directly with real-world data.
     - Create more differentiated solutions by integrating custom-defined ML models into your CRM applications once you have identified the unique data patterns and possible insights that embedded fucntionality has not.
     - Black box implementations. API acess to pretrained AI.
-    
+    - Today’s AI in CRM aims to act as an assistant to human sales and marketing staffs. It can advise and point out opportunities and problems, but the judgment and action depends on the human.
+    - Lead scoring, for example, is a fertile field for AI in CRM. The AI system can analyze a wealth of information about prospects and rank them according to their likelihood to purchase. The list can be presented to the sales staff with the most promising prospects first and the sales force can take it from there. A great application of CRM data is predicting activity. All sorts of events can be predicted using the historical data in the CRM database, including likelihood of making contact at a specific time of day and the probability of response to an email. A lot of the potential sales executives want to see is to predict the future so they can better plan.
+    - Customer segmentation
+
+    - Add the features ignored slide -> slide n°12
