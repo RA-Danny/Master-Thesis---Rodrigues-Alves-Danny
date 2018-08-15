@@ -20,7 +20,7 @@ A CRM can also be viewed as a set of macro-level process that subsumes numerous 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=12cm]{images/CRM-CustomerLifeCycle.png}
+    \includegraphics[width=14cm]{images/CRM-CustomerLifeCycle.png}
     \caption[CRM supports the customer life cycle]{CRM supports the customer life cycle. From \cite{DataAnalyticsinCRMProcessesALiteratureReview}.}
     \label{fig:crm-clc}
 \end{figure}
@@ -43,7 +43,7 @@ In a customer relationship management context, artificial intelligence can be us
 
 \subsection{Outline of the analysis}
 % -------- Goal of the analysis
-One of the aims of this thesis is to provided an overview of the integration of artificial intelligence technologies in a CRM context. With the advent of artificial intelligence and its relative ease of access, CRM vendors can consider a new product line around AI. When a CRM editor announces the integration of AI components in its solutions, it aims to attract new customers while showing current customers that its system is innovative.
+One of the goals of this thesis is to provide an overview of the integration of artificial intelligence technologies in a CRM context. With the advent of artificial intelligence and its relative ease of access, CRM vendors can consider a new product line around AI. When a CRM editor announces the integration of AI components in its solutions, it aims to attract new customers while showing current customers that its system is innovative.
 
 CRM editors claim to have easy to use and well integrated AI solutions, but what is offered in these solutions? What are the kind of AI technologies used? How easy to configure are those AI features? Are they really tailored and useful for the business? All companies are different, but can they adapt these innovative solutions to their unique business? What AI functionalities will become \textit{mandatory} for a good CRM? The research in this section tries to address those issues and really understand what is meant by \textit{CRM AI}.
 
@@ -58,15 +58,17 @@ The CRM software market is growing rapidly, especially due the awareness of cust
 There are a lot of offers in the CRM market\footnote{For example, \textit{Wikipedia} lists a total of 29 CRM systems.}. Some editors build complete CRM solutions while others focus on one or two applications, such as sales force automation or customer engagement solutions. The editors analyzed in this project have been selected based on Gartner's \textit{Magic Quadrant}\footnote{Gartner is a research and advisory firm providing analysis on the Information Technology (IT) field.}. Two types of magic quadrant are directly related to customer relationship management: sales force automation and customer engagement (figures \ref{fig:magic-quadrant-sales-force} and \ref{fig:magic-quadrant-customer-engagement}). A magic quadrant contains four groups and all global CRMs classified as \textit{Leaders} are considered : \textit{Salesforce}, \textit{Microsoft}, \textit{Oracle} and \textit{Pegasystems}. Despite not being classified as a \textit{leader}, \textit{SAP} is also considered since it is the third largest publisher \cite{crm-market-share}. These five CRMs are the big fishes in the market (40.4\% of the market) and have the stongest R\&D departments: they are the most likely to invest in AI features. Nevertheless, to stand out in the market, smaller companies specialize their products around a specific CRM's application. To be as complete as possible, \textit{SugarCRM}, \textit{Infor}, \textit{Zoho} and \textit{Zendesk} are also investigated.
 
 \begin{figure}[!h]
-    \begin{minipage}[c]{0.48\linewidth}
-        \includegraphics[width=\linewidth]{images/magic_quadrant_sales_force_automation.png}
+    \begin{minipage}[c]{0.50\linewidth}
+        \includegraphics[width=\linewidth]{images/magic_quadrant_sales_force_automation_2.png}
+        \captionsetup{margin=0.2cm}
         \caption[Magic Quadrant for Sales Force Automation]{Gartner, Magic Quadrant for Sales Force Automation, July 2017}
         \label{fig:magic-quadrant-sales-force}
     \end{minipage}
     \hfill
-    \begin{minipage}[c]{0.49\linewidth}
-        \includegraphics[width=\linewidth]{images/magic_quadrant_customer_engagement_center.png}
-        \caption[Magic Quadrant for the CRM Customer Engagement Center]{Gartner, Magic Quadrant for the CRM Customer Engagement Center, May 2017}
+    \begin{minipage}[c]{0.50\linewidth}
+        \includegraphics[width=\linewidth]{images/magic_quadrant_customer_engagement_center_2.png}
+        \captionsetup{margin=0.1cm}
+        \caption[Magic Quadrant for the CRM Customer Engagement Center]{Gartner, Magic Quadrant for CRM Customer Engagement Center, May 2017}
         \label{fig:magic-quadrant-customer-engagement}
     \end{minipage}
 \end{figure}
@@ -74,6 +76,7 @@ There are a lot of offers in the CRM market\footnote{For example, \textit{Wikipe
 To analyze all those CRM solutions, company's website, press releases, community forums and knowledge base articles are used. Blog posts, specialized websites, and analyst firm's report are also widely used. Note that it was not possible to configure and test the functionalities detailed in the following sections. Products and features announced by CRM's editors after April 2018 are not taken into account in this research.
 
 \subsection{CRM Editors review}
+\label{sec:crm-editors-review}
 
 \subsubsection*{Dynamics 365}
 Dynamics 365 is the customer relationship management solution of Microsoft. Created in 2003 as Microsoft Dynamics CRM, the product was rebranded Dynamics 365 when an Enterprise Resource Planning (ERP) solution has been combined with the CRM. One of the key characteristics of Dynamics 365 is its native integration with other Microsoft products, like Microsoft Exchange, Office 365, Sharepoint and PowerBI. More recently, Dynamics 365 is building synergies with Azure technologies, which seems to be the foundation for AI inside Dynamics 365. 
@@ -106,7 +109,7 @@ A second product available in Pega CRM is named \textit{Customer Decision Hub}, 
 \subsubsection*{Salesforce}
 Created in 1999 and providing only cloud solutions, Salesforce is the worldwide leader regarding customer relationship management systems. Between 2015 and 2016, Salesforce acquired several AI start-ups and build a team of 150 data engineers. This strategy enabled the company to launch Salesforce Einstein, an artificial intelligence solution spanning over all CRM's products.
 
-For a company's sales department, Einstein offers lead scoring to prioritize client's the most likely to convert and a forecasting feature to estimate the sales for each salesperson. It also gives client's \textit{insights} such as its overall happiness score. This score is computed with sentiment analysis on emails but also company-specific information based on the news (for example if its share price falls on the stock market, the client will be unhappy). Marketing's departments can use Einstein for it mass mailing operation and bring some personalization into the emails. For example, based on recommender systems, the email can integrate a link to a specific product that customers are successive to buy. The \textit{Email Engagement Prediction} feature predicts for each customer its likelihood to open an email or unsubscribe from the newsletters. These predictions can be used to send different contents for each customer and personalize the message. For the customer service's department, Salesforce can classify incoming customer tickets with Einstein and has announced recommended responses and intelligent routing for mid-2018.
+For a company's sales department, Einstein offers lead scoring to prioritize client's the most likely to convert and a forecasting feature to estimate the sales for each salesperson. It also gives client's insights such as its overall happiness score. This score is computed with sentiment analysis on emails but also company-specific information based on the news (for example if its share price falls on the stock market, the client will be unhappy). Marketing's departments can use Einstein for it mass mailing operation and bring some personalization into the emails. For example, based on recommender systems, the email can integrate a link to a specific product that customers are successive to buy. The \textit{Email Engagement Prediction} feature predicts for each customer its likelihood to open an email or unsubscribe from the newsletters. These predictions can be used to send different contents for each customer and personalize the message. For the customer service's department, Salesforce can classify incoming customer tickets with Einstein and has announced recommended responses and intelligent routing for mid-2018.
 
 All features mentioned above are configurable without any coding-skills, but Salesforce created \textit{MyEinstein}, an API-based service to build custom applications. As of March 2018, this tool was composed of the beta versions of \textit{Einstein Bots} with entity, intent, and sentiment analysis and of \textit{Einstein Prediction Builder} to build predictive models, similar to Dynamics Customer Insights.
 
@@ -129,7 +132,7 @@ Zendesk is not a global CRM, it has no sales force automation nor developed mark
 \subsubsection*{ZohoCRM}
 Zoho Corporation is specialized in developing business and IT solutions available as SaaS. The CRM - \textit{ZohoCRM} - has all its AI features regrouped under \textit{Zia}, described as an artificial intelligence powered sales assistant. Triggered by voice or chat, the Zia assistant performs some pre-defined tasks such as adding a note to a meeting or retrieving client's contact information. Zoho provides an user-interface to create new capabilities for Zia without any coding- skills required.
 
-Zia is a chatbot but it also encapsulates other AI features of ZohoCRM, among which lead scoring, anomalies detection to control sales, email sentiment analysis and an indication on the best time to contact each client. It also proposes a feature to monitor the tasks performed by CRM's user and proactively suggest new processes for a better efficiency. It's not clear if artificial intelligence techniques are really being used for these functionalities. While it is obvious that email's sentiment analysis relies on NLP algorithms, the anomalies detection or best time to contact a client features can be done without any kind of AI. Those AI features are black-boxes to be used \textit{as-is} in the CRM.
+Zia is a chatbot but it also encapsulates other AI features of ZohoCRM, among which lead scoring, anomalies detection to control sales, email sentiment analysis and an indication on the best time to contact each client. It also proposes a feature to monitor the tasks performed by CRM's user and proactively suggest new processes for a better efficiency. It's not clear if artificial intelligence techniques are really being used for these functionalities. While it is obvious that email's sentiment analysis relies on NLP algorithms, the anomalies detection or best time to contact a client features can be done without any kind of AI. Those AI features are black-boxes to be used as-is in the CRM.
 
 
 % -------------------------------- Section: Editors Ranking
@@ -154,17 +157,18 @@ Most of the features described above are directly available as black-boxes. Some
 
 
 \subsection{Ranking}
-If today a ranking of CRM softwares in relation to their artificial intelligence offerings is to be made, Salesforce would be ahead, Pega CRM second and both SAP and Dynamics 365 at the third place of this fictitious podium. The \textit{Einstein} suite of features is complete and isn't lacking of any important tool that others have, except for custom made models. Compare to the competition, Salesforce has several AI products already in production and the roadmap outlines that all major features cited above are planned to be available in Fall 2018. Pega CRM has already some out-of-the-box features, but being able to import custom models makes this CRM very interesting regarding AI. Finally SAP and Dynamics 365 have some products in preview or beta mode, but still not in production. 
+If today a ranking of CRM softwares in relation to their artificial intelligence offerings is to be made, Salesforce would be ahead, Pega CRM second and both SAP and Dynamics 365 at the third place of this fictitious podium. The Salesforce Einstein suite of features is complete and isn't lacking of any important tool that others have, except for custom made models. Compare to the competition, Salesforce has several AI products already in production and the roadmap outlines that all major features cited above are planned to be available in Fall 2018. Pega CRM has already some out-of-the-box features, but being able to import custom models makes this CRM very interesting regarding AI. Finally SAP and Dynamics 365 have some products in preview or beta mode, but still not in production. 
 
 Based on the product's roadmaps and other announcements about future offers, a similar ranking can be done for the CRM AI market in the long term (3-5 years). It can be expected that Salesforce will still be the leader for AI features within a CRM, but Dynamics 365 will probably not be that far. Indeed, Microsoft announced the desire to integrate the AI solutions present in Azure within its CRM. If such integration is successful, Dynamics 365 will be able to match all features of Salesforce Einstein. Behind this duo, Pegasystems and SAP will probably follow, thanks to Pega current AI foundations and SAP investments in the field. 
 
+Note that these rankings are subjective and depend on what kind of features will really be implemented by CRM's editors. Today, they are promising a lot of things regarding AI, to build \textit{more intelligent systems} than ever, but what happens in reality is often not the same as promised. Technology is evolving, customer's desires are changing and this can lead to features that will never be available in production.
 
 % -------------------------------- Section: Conclusion
-\section{Conclusion}
+\section{Discussion}
 The majority of products concern embedded AI. Even if those features might not be a real game changer, it allows companies to experience new technologies without a lot of investments nor deep knowledge on the field. This is clearly a first step in using AI for customer relationship management. A second step is to have CRM users building there own AI components. Pretrained machine learning accessible with REST API calls is one way to do so.
 
 Future improvements in artificial intelligence within CRM will probably go through collaborations with other systems. Similar to the partnership between Salesforce and Google Analytics, the AI capabilities of a CRM's marketing application will integrated data from Data Management Platforms (DMP)\footnote{A DMP collects unstructured audience data from any sources (online, offline or mobile) and treat it in a way that marketers can understand the complete journey of a customer, known or uknown.}. DMP platforms are also investing in AI tools to segment the audience and retrieve insights specific to each channel. Synergies between CRM and DMP are beginning to be made. For example, a partnership between Dynamics 365 and Adobe concerns the Adobe Audience Manager, a DMP platform which makes intensive use of Adobe Sensei, the AI tool of Adobe.
 
-Some AI features proposed by CRM's editors have not been taken into account: social network monitoring, Internet of Things solutions, and machine learning for image and video processing. Even if those field are very interesting, the possible applications in a CRM context are either not clear or not based on CRM data. Since this research is about customer relationship management, they have been discarded.
+Some AI features proposed by CRM's editors have not been taken into account: social network monitoring, Internet of Things solutions, and machine learning for image and video processing. Even if those field are very interesting, the possible applications in a CRM context are either not clear or not based on CRM data. Since this research is about customer relationship management, they have been discarded. Also, the potential effects of the General Data Protection Regulation (GDPR) have not been considered in this work\footnote{GDPR is a European Union regulation regarding privacy and data protection for individuals within the European Union.}.  CRMs are dealing with customer data and the GDPR must be considered when using this data. Future AI features implemented in CRM will need to be GDPR-compliant.
 
-Finally, it's clear that CRM's editors are investigating and investing into AI features, in particular machine learning and NLP features. Either by regrouping all AI features under a single name (Einstein, Leonardo, Coleman, Zia) or with \textit{intelligent} applications, each CRM's editors has and is creating new artificial intelligence features to extend their current capabilities. It seems that having AI features will not allow one or other CRM to \textit{kill the competition}, but having none might seriously hurt a business.
+It's clear that CRM's editors are investigating and investing into AI features, in particular machine learning and NLP features. Either by regrouping all AI features under a single name (Einstein, Leonardo, Coleman, Zia) or with \textit{intelligent} applications, each CRM's editors has and is creating new artificial intelligence features to extend their current capabilities. It seems that having AI features will not allow one or other CRM to \textit{kill the competition}, but having none might seriously hurt a business.

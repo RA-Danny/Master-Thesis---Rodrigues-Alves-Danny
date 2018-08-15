@@ -2,11 +2,11 @@
 
 One of the goals of this project is to integrate an artificial intelligence solution within a CRM. Based on the research reported in chapter \textit{CRM AI}, it has been decided to develop a predictive machine learning model with real world data from a CRM. This part of the thesis has been developed in collaboration with one of ELCA's client, hereafter referenced as \textit{Contoso} \footnote{Client's name and business subject to confidentiality.}.
 
-This chapter details the entire machine learning project. Sections \ref{sec:use-case} and \ref{sec:ml-metrics} explain the business problem Contoso is facing and how a machine learning solution might solve it. The data contained in Contoso's CRM is reported in section \ref{sec:crm-data} and section \ref{sec:ml-experimentation} details the machine learning experimentations. The model's deployment and integration within Contoso's CRM are outlined in section \ref{sec:crm-deployment}. Finally, sections \ref{sec:use-case-further-work} and \ref{sec:use-case-conclusion} conclude the chapter with a reflection on the entire initiative.
+This chapter details the entire machine learning project. Sections \ref{sec:use-case} and \ref{sec:ml-metrics} explain the business problem Contoso is facing and how a machine learning solution might solve it. The data contained in Contoso's CRM is reported in section \ref{sec:crm-data} and section \ref{sec:ml-experimentation} details the machine learning experimentations. The model's deployment and integration within Contoso's CRM are outlined in section \ref{sec:crm-deployment}. Finally, section \ref{sec:use-case-further-work} discusses the entire initiative.
 
 % -------------------------------- Section: Client's use case
 \section{Client's use case} \label{sec:use-case}
-\textit{Contoso} is an energy-provider company active overall Switzerland. Among the offers and services, Contoso's key-product is subject to a very tense market, where its characteristics are the same among all competitors and the price is the only differentiator. When dealing with this product, several specificities must be considered:
+Contoso is an energy-provider company active overall Switzerland. Among the offers and services, Contoso's key-product is subject to a very tense market, where its characteristics are the same among all competitors and the price is the only differentiator. When dealing with this product, several specificities must be considered:
 \begin{itemize}
 \item The product is classified as a \textit{physiological need} in Maslow's hierarchy of needs \cite{def:Maslow}. People buy the product because they \textit{need} it and not because they \textit{like} it.
 \item Due to its classification in Maslow's hierarchy, the product is usually stored in high quantities. The typical customer will make a large order, fill its supplies, consume the product and once fully consumed, the product is bought again in large quantities. Therefore, the product is not bought on a daily or weekly basis but rather on an annual basis. This is a real difficulty for Contoso while trying to build customer loyalty.
@@ -122,7 +122,7 @@ Data comes from Contoso's CRM, a Dynamics 365 online instance. By using the \tex
 
 \subsection{Orders}\label{sec:crm-orders}
 
-The \texttt{Order} entity holds all information about an order made by an account. Dynamics 365 contains all orders carried out by Contoso since 2013. In this project, all orders from January 2013 until June 2018, included, are considered. Once the raw data has been download, this set of 808'532 orders needs to be cleaned. Indeed, even if a CRM saves its data in an organized manner and that Dynamics 365 has some verification upon data entry, mistakes can still happen when a person enters data into the system. Orders have been discarded based on their names - empty or not -, on their status - active or not - and on their internal characteristics (amount delivered equal to zero, delivery date in 1956, delivery date occurring before the order date, ..). This cleaning phase removes 28.79\% of the orders, which gives a data set of 575'679 orders, each order having 37 features.
+The \texttt{Order} entity holds all information about an order made by an account. Dynamics 365 contains all orders carried out by Contoso since 2013. In this project, all orders from January 2013 until June 2018, included, are considered. Once the raw data has been download, this set of 808'532 orders needs to be cleaned. Indeed, even if a CRM saves its data in an organized manner and that Dynamics 365 has some verification upon data entry, mistakes can still happen when a person enters data into the system. Orders have been discarded based on their names - empty or not -, on their status - active or not -, and on their internal characteristics (amount delivered equal to zero, delivery date in 1956, delivery date occurring before the order date, ..). This cleaning phase removes 28.79\% of the orders, which gives a data set of 575'679 orders, each order having 37 features.
 
 All these orders have been made by 183'706 accounts, with a mean of 3.14 orders per account and a median of 2. Grouping accounts per the number of orders reveals that 50.77\% of accounts have made only one or two orders\footnote{Accounts which have made at least one order since 2013.}. This demonstrates the singularity of a very competitive market in which clients often change their suppliers and fully benefit from the competition. In respect to the machine learning model, it will be very difficult to extract some common behavior and generalization out of these accounts. Therefore, accounts with less than three orders have been discarded, leading to a dataset composed of 451'986 orders (-21.49\%).
 
@@ -155,7 +155,7 @@ Indeed, all accounts are linked to a primary contact. The \texttt{Contact} entit
 \begin{figure}[h]
     \centering
     \includegraphics[width=15cm]{images/account-contact-name-orders.png}
-    \caption[Account and contact's name influence of order's frequency]{Number of months between two orders related to the account-contact name}
+    \caption[Account and contact's name influence on order's frequency]{Number of months between two orders related to the account-contact name}
     \label{fig:account-contact-name-orders}
 \end{figure}
 
@@ -178,8 +178,8 @@ As defined above, the model is planned to be used on a monthly basis and its out
 Figure \ref{fig:data-build-example} contains an example of the data creation process. This account has made four orders in April 2013, March 2014, January 2015 and March 2016, marked as yellow circles. The first entry in the data relates to May 2013, the month following account's first order. The output of this entry is set to 11 months, the number of months between May 2013 and March 2014, date of account's second order. The same principle is applied to all months, until March 2016, date of the last order made by this account.
 
 \begin{figure}[h]
-    \hspace{-1cm}
-    \includegraphics[width=17cm]{images/data-build-ml-example.png}
+    %\hspace{-1cm}
+    \includegraphics[width=15cm]{images/data-build-ml-example_2.png}
     \caption[Process to build data for machine learning]{Sketch of the process to build data for the machine learning models. Yellow circles model account's orders through time. The entry 1. corresponds to the month May 2013, the entry 17. to September 2014 and the entry 34. to March 2016.}
     \label{fig:data-build-example}
 \end{figure}
@@ -198,7 +198,7 @@ Each row in the final machine learning data is composed of three types of featur
 \begin{figure}[h]
     \centering
     \includegraphics[width=8cm]{images/data-build-ml-example-row.png}
-    \caption[Features building for specific month]{Sketch of the features used for the row of September 2014 in figure \ref{fig:data-build-example}}
+\caption[Feature's combination for specific month]{Sketch of the features used for the row of September 2014 in figure \ref{fig:data-build-example}}
     \label{fig:data-build-row-example}
 \end{figure}
 
@@ -242,7 +242,7 @@ The next experiments are related to the set of features used. With the \texttt{E
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=15cm]{images/feature_selection.png}
-    \caption[F1-score based on feature selection]{F1-score obtain on the testing set with three different strategies for features selection.}
+    \caption[F1-scores based on feature selection]{F1-scores obtained on the testing set with three different strategies for features selection.}
     \label{fig:feature-selection}
 \end{figure}
 
@@ -301,7 +301,7 @@ Once the model's architecture is chosen, internal parameters can be investigated
         Compiler                      & Loss function                      & log cosh \\
                                       & Optimizer                          & adam
     \end{tabular}
-    \caption{Neural Network parameters for training final model}
+    \caption{Neural network parameters for training final model}
     \label{tab:nn-final-parameters}
 \end{table}
 
@@ -313,12 +313,12 @@ To be able to use LSTMs, the data need to be reshaped. Previous models were expe
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=10cm]{images/lstm-data-build.png}
-    \caption[LSTM data build]{Example of reshaping the data for LSTM models. From the initial data, the fourth entry is randomly selected and placed as the last step of the data. Its output is the output for this data entrie. Orders 1, 2, and 3 are added as the first stepd of the data. All other orders are discarded.}
+    \includegraphics[width=12cm]{images/lstm-data-build.png}
+    \caption[Data combination for LSTM networks]{Example of reshaping the data for LSTM models. From the initial data, the fourth entry is randomly selected and placed as the last step of the data. Its output is the output for this data entrie. Orders 1, 2, and 3 are added as the first stepd of the data. All other orders are discarded.}
     \label{fig:lst-data-build}
 \end{figure}
 
-Similar to the experiments with previous neural networks, several model architectures are investigated to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM part. The results are available in annex \ref{annex:lstm-experiments}. LSTM models achieve F1-score close to the ones obtaines with previous models, but they are not better and have a longer training time.
+Similar to the experiments with previous neural networks, several model architectures are investigated to train LSTMs: one with only the LSTM layer, others with some fully-connected dense layers after the LSTM part. The results are available in annex \ref{annex:lstm-experiments}. LSTM models achieve F1-score close to the ones obtained with previous models, but they are not better and have a longer training time.
 
 
 
@@ -331,12 +331,12 @@ The best model is a Neural Network composed of five fully connected hidden layer
 \hspace*{0.8cm}           2. \texttt{Testing data}:    F1-score of \textbf{0.823}, precision of 0.804 and recall of 0.843 \\
 \hspace*{0.8cm}           3. \texttt{Validation data}: F1-score of \textbf{0.820}, precision of 0.750 and recall of 0.906
 
-Since the task is scored with metrics used for classification problem, the confusion matrix obtain with the validation data is generated in figure \ref{fig:cf-matrix-validation}.
+Since the task is scored with metrics used for classification problem, the confusion matrix obtained with the validation data is generated in figure \ref{fig:cf-matrix-validation}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=15cm]{images/cf-matrix-validation_complete.png}
-    \caption[Confusion matrix for validation data]{Confusion matrices for the validation data obtain with the best model. Two version: pure counts (left) and normalized per row (right).}
+    \caption[Confusion matrices for validation data]{Confusion matrices for the validation data obtain with the best model. Two version: pure counts (left) and normalized per row (right).}
     \label{fig:cf-matrix-validation}
 \end{figure}
 
@@ -362,7 +362,7 @@ To deploy the model, four Azure services are used: \textit{Functions}, \textit{Q
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=12cm]{images/azure-archi-weekly.png}
-    \caption[Deployment architecture for scheduled predictions]{Connection between Azure services and Dynamics 365 to compute predictions on a recurring basis.}
+    \caption[Deployment's architecture for scheduled predictions]{Connection between Azure services and Dynamics 365 to compute predictions on a recurring basis.}
     \label{fig:azure-deployment}
 \end{figure}
 
@@ -383,7 +383,7 @@ One advantage of using this architecture is the connection between the Azure Que
 
 Experiments with this architecture showed a total running time of approximately 8 hours for 106'000 accounts. Compared to others services powered by Azure like the \textit{Azure Machine Learning}'s suite, this architecture is significantly less expensive, much more flexible and better suited for this use case where data is created on-the-fly.
 
-The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, Dynamics 365 sends an HTTP request to the Web App and updates the \textit{Account} entity.
+The Azure Web App described above is also used to run the prediction for a specific account, upon CRM's user request. In that case, Dynamics 365 sends an HTTP request to the Web App and updates the \textit{Account} entity. Note that currently, the Web App applies no restriction on who can call its HTTP endpoints. Token-based authentication should be added to secure the system.
 
 \subsection{Integration with Dynamics 365}
 The predictions made by the machine learning model must be visible and usable directly from Dynamics 365. Inside the \texttt{Account} entity page, a section \texttt{ML Predictions} is created with two fields: \texttt{Next Order Prediction} and \texttt{Last refresh}. An example of such page is visible in figure \ref{fig:dynamics-account-ml-screenshot}. The first field contains the predicted month for account's next order. The date the machine learning model was ran is displayed below, in the second field. This enables CRM's users to see the prediction and when it was made. If the prediction is \textit{too old} or that new account-related information has been added to Dynamics 365, predictions can be refreshed on-demand with the blue button \texttt{Run predictions}. This button is grayed out and inactive throughout the entire process (approx. 5-10 seconds). No refresh or page reload is necessary, both fields are automatically updated. If the process ends successfully, the button turns out green, but if a mistake happens, the button is red.
@@ -400,20 +400,17 @@ Predictions are stored as a CRM field and can be used to create \textit{Marketin
 
 % -------------------------------- Section: Further Work
 \section{Discussion} \label{sec:use-case-further-work}
-The models built for this task rely heavily on feature engineering. Indeed, data coming from CRM needs to be combined and reshaped to bring useful value to a machine learning model. The set of features used with the best model is not giving a lot of importance to the \textit{external} data: weather and price-related features. Based on the customer journey visualization and Contoso's business knowledge, these two external factors play a role in the customer's ordering pattern. New features or even new models can be investigated to incorporate such information.
+The models built for this task rely heavily on feature engineering. Indeed, data coming from CRM needs to be combined and reshaped to bring useful value to a machine learning model. The set of features used with the best model is not giving a lot of importance to the \textit{external} data: weather and price-related features. According to the customer journey visualization and Contoso's business knowledge, these two external factors play a role in the customer's ordering pattern. New features or even new models can be investigated to incorporate such information.
 
-A possible method to improve current models is to include features related to the customer's profile, for example customer's price sensitivity. Such features would help the model to weight the importance of price-related information. It will also enable Contoso to make personalized offers to customers. For example, if a customer is flagged as a \textit{jumper profile} with high price sensitivity, a personalized offer can be proposed to retain the customer.
-
-The last phase of this project involves the deployment and integration of a machine learning model within a Dynamics 365 instance. The architecture is built for the current Contoso's usage of predictions: monthly usage of predictions with no time constraints to make them. If the company decides to change the way of working with the predictions, for example running them once or twice a week, the current architecture might not be adequate. The cloud-based components of Azure can be scaled, but creating data on-the-fly is a time-consuming step. Having part of the data static (account-related features) and only build the month-related features like the "\textit{number of weeks since last order}" or "\textit{weather of past week}" is an interesting option.
+Features related to the customer's profile can improve the current models, for example customer's price sensitivity. Such features would help the model to weight the importance of price-related information. It will also enable Contoso to make personalized offers to customers. For example, if a customer is flagged as a \textit{jumper profile} with high price sensitivity, a personalized offer can be proposed to retain the customer.
 
 In the literature, the vast majority of machine learning projects involving customer data concern the "market basket analysis" task. It's a problem where customers have a purchase history with several products through time \cite{temporal-feature}. Contoso's use case is more related to event predictions tasks for rare events \cite{7953302, Malhotra2015LongST}, but modeling repeat purchasing patterns and not only one-time occurrence. Further work on this problem can draw inspiration from other research fields like bio-medical studies for recurrent events \cite{biomedical-recurrent-events} or e-commerce related studies \cite{Liu:2016-repeat-buyer, Tian2015}. It is also worth noticing that other studies related to event prediction and customer data depend on extensive hand-engineered features.
 
-Nevertheless, neural networks are used in the majority of recent studies. A drawback of using a neural network model compared to linear or tree-based model is that there are no justifications for the predictions. CRM users have access to the predictions, but there is no feedback or explanation \textit{why} the neural network outputs such prediction.
+Nevertheless, neural networks are used in the majority of recent studies. A drawback of using a neural network model compared to linear or tree-based model is that there are no justifications for the predictions. CRM users have access to the predictions, but there is no feedback or explanation \textit{why} the neural network outputs such prediction. For example, compared to Salesforce Einstein and its lead scoring feature, the user interface can be redesigned to include some information regarding the predictions.
 
 Regarding the LSTM neural networks, it's an interesting option if Contoso's decides to change the scoring strategy. For example, if the number of weeks until next order are predicted instead of the number of months, LSTMs might give better predictions than a fully-connected network. Indeed, the LSTM models built had a better $t_0\_p_0$ score compared to other models. The assumption is that LSTM models are more robust and confident regarding the \textit{closest} predictions.
 
-% -------------------------------- Section: Conclusion
-\section{Conclusion} \label{sec:use-case-conclusion}
-In this project, real-world data coming from a CRM are used to create predictions regarding the date of the next customer order. Predictions are given by a neural network composed of five fully connected layers. Trained with all orders between 2013 and 2016, the model reaches an F1-score of 0.828 for 2018 orders. The F1-score used is a harmonic mean between the precision and recall of the model, two metrics computed with one-month tolerance on predictions.
+The last phase of this project involves the deployment and integration of a machine learning model within a Dynamics 365 instance. The architecture is built for the current Contoso's usage of predictions: monthly usage of predictions with no time constraints to make them. If the company decides to change the way of working with the predictions, for example running them once or twice a week, the current architecture might not be adequate. The cloud-based components of Azure can be scaled, but creating data on-the-fly is a time-consuming step. Having part of the data static (account-related features) and only build the month-related features like the "\textit{number of weeks since last order}" or "\textit{weather of past week}" is an interesting option.
 
-An Azure-based architecture supports the incorporation of the predictions into the daily usage of Dynamics 365. This architecture enables recurrent predictions with user-intervention, as well as one-demand prediction requested directly by Dynamics 365 users.
+Further work related to the integration within Dynamics 365 might save the predictions to have a complete history of model's output and compared prediction and true orders directly from the CRM. For example, a Dynamics 365 entity might be created with three fields: the account, the predictions, and the date of when was the prediction made. 
+Another thing that can be investigated in further work relates to the model's updates. There are two options to add new data into the model. The first one is to manually retrieve the data from the CRM, reshaped them, retrain the model, and validated the results. But this process can also be automatized. For example, the model can be re-trained with all new orders each week. Testing and validation scores can be computed and stored, to allow a Contoso's employees to assert the model performance. This would be similar to Pega CRM's adaptive model described in section \ref{sec:crm-editors-review}.
