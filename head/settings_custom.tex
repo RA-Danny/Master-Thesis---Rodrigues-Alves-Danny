@@ -84,3 +84,12 @@
   \fontdimen7\font=0.1em% extra space
   \hyphenchar\font=`\-% allowing hyphenation
 }
+
+
+\usepackage{epigraph}
+\setlength\epigraphwidth{6cm}
+\setlength\epigraphrule{0pt}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\epigraph}{\@epitext{#1}}{\itshape\@epitext{#1}}{}{}
+\makeatother

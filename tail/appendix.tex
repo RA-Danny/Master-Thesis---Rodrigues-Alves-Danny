@@ -1,13 +1,22 @@
 \appendix
 
+\chapter{CRM AI features overview}
+\label{annex:crm-ai-features}
+\begin{figure}[htbp]
+    \centering
+    \vspace*{-1.5cm}
+    \hspace*{-1cm}
+    \includegraphics[width=17cm]{images/all_features.png}
+\end{figure}
+
 % ------------------------------------------ CRM Data Facts
 \chapter{Customer Journey}
 
-Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account's reservoir. Monthly temperatures degrees and prices are also plotted. The x-axis indicates the date of when was the order made and for the monthly temperature and price. There are three y-axis: one for the quantity ordered, one for the monthly temperature (in blue), and one for the monthly price (in green). \\
+Example of a \textit{customer journey} plot. Each dot represents an order made by the account, with a different color for each type of product. The number of weeks between an order and the previous one is written below each dot. The red dashed line on top of the plot indicates the volume of account's reservoir. Monthly temperatures degrees and prices are also plotted. The x-axis indicates the date. There are three y-axis: one for the quantity ordered, one for the monthly temperature (in blue), and one for the monthly price (in green). \\
 
 \begin{figure}[htbp]
     \centering
-    \hspace*{-2.5cm}
+    \hspace*{-1.5cm}
     \includegraphics[width=19cm]{images/customer-journey_2.png}
     \caption{Example of a customer journey plot}
     \label{fig-annex:customer-journey}
@@ -360,4 +369,4 @@ The hyperparameters tuning phase is decomposed into five parts, each part relate
 
 
 \noindent\textbf{Comments:}\\
-It's clear that Model 4 performs the best. This is the most complete model, with three fully connected hidden layers following the LSTM one. Compared to previous neural network models without an LSTM, the \texttt{Precision} metric achieves a better score. When looking at the detailed score, LSTM models perform much better with the $t_0\_p_0$ metric: it indicates that the predictions are "precise" and would perform the best if the model's one-month tolerance is dropped.
+It's clear that Model 4 performs the best. This is the most complete model, with three fully connected hidden layers following the LSTM one. Compared to previous neural network models without an LSTM, the \texttt{Precision} metric achieves a better score. When looking at the detailed score, LSTM models perform much better with the $t_0\_p_0$ metric: it indicates that the predictions are \textit{precise} and would perform the best if the model's one-month tolerance is dropped.
